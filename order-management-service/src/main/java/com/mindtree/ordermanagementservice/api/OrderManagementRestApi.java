@@ -12,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import com.mindtree.ordermanagementservice.model.OrderRequest;
 import com.mindtree.ordermanagementservice.model.OrderResponse;
 import com.mindtree.ordermanagementservice.model.ResponseStatusModel;
+import com.mindtree.ordermanagementservice.model.RestaurantModel;
 import com.mindtree.ordermanagementservice.service.OrderService;
 
 @RestController
@@ -31,6 +32,19 @@ public class OrderManagementRestApi {
 
 		String url = "http://ZUUL-GATEWAY/PAYMENT-GATEWAY/payNow/" + orderRequest.getResturentId();
 		ResponseStatusModel responseModel = template.getForObject(url, ResponseStatusModel.class);
+		Object[] objects = responseModel.getData();
+		RestaurantModel restaurantModel = null;
+		for (Object object : objects) {
+			restaurantModel = (RestaurantModel) object;
+		}
+		String pincode = restaurantModel.getPincode();
+		if(!orderService.pinValidation(pincode))
+		{
+			//exception
+		}
+		
+		
+
 		return null;
 	}
 
