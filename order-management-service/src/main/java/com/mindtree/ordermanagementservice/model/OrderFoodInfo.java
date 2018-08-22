@@ -1,7 +1,13 @@
 package com.mindtree.ordermanagementservice.model;
 
-public class OrderFoodInfo {
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
+@Entity
+public class OrderFoodInfo {
+	@Id
+	@GeneratedValue
 	private int orderFoodId;
 	private int quantity;
 	private String additionalInfo;

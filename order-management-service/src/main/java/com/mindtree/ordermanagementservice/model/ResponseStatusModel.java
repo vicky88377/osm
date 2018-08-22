@@ -18,6 +18,8 @@ public class ResponseStatusModel {
 	private String message;
 
 	private Object[] data;
+	@JsonProperty(required = false)
+	private int OrderId;
 
 	/**
 	 * 
@@ -121,6 +123,14 @@ public class ResponseStatusModel {
 
 		this.data = data;
 
+	}
+
+	public int getOrderId() {
+		return OrderId;
+	}
+
+	public void setOrderId(int orderId) {
+		OrderId = orderId;
 	}
 
 }

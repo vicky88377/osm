@@ -1,12 +1,21 @@
 package com.mindtree.ordermanagementservice.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+@Entity
 public class DeliveryInfo {
+	@Id
+	@GeneratedValue
 	private int id;
 	private String deliveryBoyName;
 	private long deliveryBoyContactNumber;
 	private String deliveryAddress;
 	private int deliveryStatus;
-	private int pincode;
+	private String latitude;
+
+	private String longitude;
 
 	public int getId() {
 		return id;
@@ -48,14 +57,20 @@ public class DeliveryInfo {
 		this.deliveryStatus = deliveryStatus;
 	}
 
-	public int getPincode() {
-		return pincode;
+	public String getLatitude() {
+		return latitude;
 	}
 
-	public void setPincode(int pincode) {
-		this.pincode = pincode;
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
 	}
 
-	
+	public String getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
 
 }

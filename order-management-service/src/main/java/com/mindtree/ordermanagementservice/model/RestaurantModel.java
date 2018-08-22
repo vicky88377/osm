@@ -57,8 +57,6 @@ public class RestaurantModel {
 
 	private String longitude;
 
-	private String pincode;
-
 	public String getRestaurantId() {
 		return restaurantId;
 	}
@@ -203,11 +201,4 @@ public class RestaurantModel {
 		this.longitude = longitude;
 	}
 
-	public String getPincode() {
-		return pincode;
-	}
-
-	public void setPincode(String pincode) {
-		this.pincode = pincode;
-	}
 }

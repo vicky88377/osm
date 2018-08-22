@@ -6,9 +6,11 @@ public class Address {
 	private String userName;
 	private String emailId;
 	private String area;
+	private String contactNo;
 	private String addressLine1;
 	private String addressLine2;
-	private String pincode;
+	private String latitude;
+	private String longitude;
 
 	public String getUserId() {
 		return userId;
@@ -58,12 +60,28 @@ public class Address {
 		this.addressLine2 = addressLine2;
 	}
 
-	public String getPincode() {
-		return pincode;
+	public String getLatitude() {
+		return latitude;
 	}
 
-	public void setPincode(String pincode) {
-		this.pincode = pincode;
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+
+	public String getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+
+	public String getContactNo() {
+		return contactNo;
+	}
+
+	public void setContactNo(String contactNo) {
+		this.contactNo = contactNo;
 	}
 
 }
