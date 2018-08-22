@@ -29,6 +29,9 @@ public class OrderManagementRestApi {
 	public OrderResponse createOder(@RequestBody OrderRequest orderRequest) {
 		// rest call to other servicse to resturent details best on the
 		// resturent id;
+		
+		
+		//gitcommit test
 
 		String url = "http://ZUUL-GATEWAY/PAYMENT-GATEWAY/payNow/" + orderRequest.getResturentId();
 		ResponseStatusModel responseModel = template.getForObject(url, ResponseStatusModel.class);
