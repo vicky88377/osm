@@ -72,14 +72,14 @@ public class OrderManagementRestApi {
 		// check Restaurant provide food for user given place;
 		if (validateRestaurantResponse.getMessage().equals("failure")) {
 			// throw exception
-			throw new OrderManagementServiceException("Resturent not provide the delivery for the given address ");
+			throw new OrderManagementServiceException("Resturent not provide the delivery for the given address ",0);
 		}
 		double totalPrice = orderFoodInfoService.priceCalculation(orderRequest.getFoodItems());
 		// validate minimum price
 		if (totalPrice < Double.parseDouble((restaurantModel.getMinimumOrder()))) {
 			// throw Exception
 			throw new OrderManagementServiceException(
-					"minimum order should grater than " + Double.parseDouble((restaurantModel.getMinimumOrder())));
+					"minimum order should grater than " + Double.parseDouble((restaurantModel.getMinimumOrder())),0);
 
 		}
 		// create deliveryinfo Records
@@ -116,21 +116,15 @@ public class OrderManagementRestApi {
 	@RequestMapping(value = "/restaurant/cancelOrder/{orderId}", method = RequestMethod.GET)
 	//@ResponseStatus(value = HttpStatus.CREATED)
 	public ResponseStatusModel cancelOrder(@PathVariable int orderId) {
-		System.out.println("Order id ::" + orderId);
 		
-		System.out.println("call service method");
 		OrderDetails orderDetail = orderDetailsService.cancelOrder(orderId);
-		System.out.println("return from service method call :: "+ orderDetail);
-		if(orderDetail != null)
-		{
+
 			ResponseStatusModel responseStatusModel = new ResponseStatusModel();
-			responseStatusModel.setStatus("200");
+			responseStatusModel.setStatusCode(200);
+			responseStatusModel.setStatus("success");
 			responseStatusModel.setMessage("order has been canceled");
 			responseStatusModel.setOrderId(orderDetail.getOrderId());
 			return responseStatusModel;
-		}
-		else
-			throw new OrderManagementServiceException("Failed to cancel the order :: Db error"); 
-	}
+	}  
 	
 }

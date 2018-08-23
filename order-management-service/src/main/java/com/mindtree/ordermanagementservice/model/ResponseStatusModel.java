@@ -33,12 +33,13 @@ public class ResponseStatusModel {
 
 	}
 
-	public ResponseStatusModel(int statusCode, String status, String message, Object[] data) {
+	public ResponseStatusModel(int statusCode, String status, String message, Object[] data,int orderId) {
 		super();
 		this.statusCode = statusCode;
 		this.status = status;
 		this.message = message;
 		this.data = data;
+		this.orderId = orderId;
 	}
 
 	/**

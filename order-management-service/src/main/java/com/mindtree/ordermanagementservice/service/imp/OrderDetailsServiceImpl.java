@@ -28,24 +28,40 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
 		OrderDetails order = null;
 		System.out.println("Inside service method ::" + orderId);
 		Optional<OrderDetails> orderDetail = orderDetailsRepository.findById(orderId);
+		
 		if(orderDetail.isPresent())
 		 {
 			order =  orderDetail.get();
+			
+			if (order.getOrderStatus().equals("P"))
+			{
+				if (OrderMangementServiceUtil.getTimeDifference(order.getOrderDate())>=10)
+				{
+					throw new OrderManagementServiceException(
+							"Order can not be canceled after 10 mins of order placed",order.getOrderId());
+				}
+				order.setOrderStatus("C");			
+				return orderDetailsRepository.save(order);
+			}
+			else if (order.getOrderStatus().equals("D"))
+			{
+				throw new OrderManagementServiceException(
+						"Order already delivered [we can't cancel the order once its delivered]",order.getOrderId());
+			}
+			else if (order.getOrderStatus().equals("C"))
+			{
+				throw new OrderManagementServiceException(
+						"Can't cancel the order as it is already been canceled",order.getOrderId());
+			}
+			
 		 }
-		 //OrderDetails orderDetail = orderDetailsRepository.findById(orderId).get();
-		System.out.println("Got the data" + order.getCustomerId());
-		System.out.println("Got the data" + OrderMangementServiceUtil.getTimeDifference(order.getOrderDate())+"  "+order.getOrderDate());
-		if (OrderMangementServiceUtil.getTimeDifference(order.getOrderDate())>=10)
+		else
 		{
 			throw new OrderManagementServiceException(
-					"Order can not be canceled after 10 mins of order placed");
+					"No Order present with requested order Id",orderId);
 		}
-		
-		order.setOrderStatus("Order Canceled");
-		
-		return orderDetailsRepository.save(order);
-		
-		
+		 //OrderDetails orderDetail = orderDetailsRepository.findById(orderId).get();
+		return order;
 	}
 
 }
