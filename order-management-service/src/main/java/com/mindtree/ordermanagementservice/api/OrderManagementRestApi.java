@@ -6,9 +6,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -27,7 +29,7 @@ import com.mindtree.ordermanagementservice.service.OrderDetailsService;
 import com.mindtree.ordermanagementservice.service.OrderFoodInfoService;
 
 @RestController
-@RequestMapping("/ordermanagement ")
+@RequestMapping("/ordermanagement")
 public class OrderManagementRestApi {
 
 	@Autowired
@@ -110,6 +112,25 @@ public class OrderManagementRestApi {
 	public OrderResponse viewOder(@RequestBody OrderRequest orderRequest) {
 		// return orderService.createOrder(order);
 		return null;
+	}
+	@RequestMapping(value = "/restaurant/cancelOrder/{orderId}", method = RequestMethod.GET)
+	//@ResponseStatus(value = HttpStatus.CREATED)
+	public ResponseStatusModel cancelOrder(@PathVariable int orderId) {
+		System.out.println("Order id ::" + orderId);
+		
+		System.out.println("call service method");
+		OrderDetails orderDetail = orderDetailsService.cancelOrder(orderId);
+		System.out.println("return from service method call :: "+ orderDetail);
+		if(orderDetail != null)
+		{
+			ResponseStatusModel responseStatusModel = new ResponseStatusModel();
+			responseStatusModel.setStatus("200");
+			responseStatusModel.setMessage("order has been canceled");
+			responseStatusModel.setOrderId(orderDetail.getOrderId());
+			return responseStatusModel;
+		}
+		else
+			throw new OrderManagementServiceException("Failed to cancel the order :: Db error"); 
 	}
 	
 }

@@ -31,6 +31,7 @@ public class RequestBundle {
 		orderDetails.setOrderDate(new Timestamp(date.getTime()));
 		orderDetails.setRestaurentId(orderRequest.getResturentId());
 		orderDetails.setTotalPrice(toatalPrice);
+		orderDetails.setOrderStatus("Order Placed");
 		return orderDetails;
 	}
 

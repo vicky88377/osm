@@ -3,7 +3,7 @@ package com.mindtree.ordermanagementservice.exception;
 public class OrderManagementServiceException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 
-	private String message;
+	//private String message;
 
 	public OrderManagementServiceException(String message) {
 		super(message);
@@ -14,9 +14,4 @@ public class OrderManagementServiceException extends RuntimeException {
 		super();
 
 	}
-
-	public String getMessage() {
-		return message;
-	}
-
 }

@@ -11,8 +11,8 @@ import com.mindtree.ordermanagementservice.model.ResponseStatusModel;
 @RestControllerAdvice
 public class GlobleExceptionHandler {
 	@ExceptionHandler(OrderManagementServiceException.class)
-	public ResponseEntity<ResponseStatusModel> customException(String message) {
-		return new ResponseEntity<>(new ResponseStatusModel(404, "failed", message, null), HttpStatus.NO_CONTENT);
+	public ResponseEntity<ResponseStatusModel> customException(OrderManagementServiceException e) {
+		return new ResponseEntity<>(new ResponseStatusModel(404, "failed", e.getMessage(), null), HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(HttpMessageNotReadableException.class)
@@ -20,5 +20,4 @@ public class GlobleExceptionHandler {
 		return new ResponseEntity<>(new ResponseStatusModel(400, "failed", "Incorrect JSON format", null),
 				HttpStatus.BAD_REQUEST);
 	}
-
 }

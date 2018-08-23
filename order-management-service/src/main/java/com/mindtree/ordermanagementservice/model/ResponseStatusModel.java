@@ -4,18 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-
 public class ResponseStatusModel {
 
-	@JsonProperty("status_code")
 
 	private int statusCode;
-
 	private String status;
-
 	private Object[] data;
 	@JsonProperty(required = false)
-
 	private String message;
 
 	public ResponseStatusModel() {
@@ -24,7 +19,7 @@ public class ResponseStatusModel {
 	}
 
 	@JsonProperty(required = false)
-	private int OrderId;
+	private int orderId;
 
 	/**
 	 * 
@@ -139,11 +134,11 @@ public class ResponseStatusModel {
 	}
 
 	public int getOrderId() {
-		return OrderId;
+		return orderId;
 	}
 
 	public void setOrderId(int orderId) {
-		OrderId = orderId;
+		this.orderId = orderId;
 	}
 
 }
