@@ -46,8 +46,8 @@ public class OrderManagementRestApi {
 	@RequestMapping(value = "/order/create", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public ResponseStatusModel createOder(@RequestBody OrderRequest orderRequest) {
-		// rest call to other servicse to resturent details best on the
-		// resturent id;
+		// rest call to other services to restaurant details best on the
+		// Restaurant id;
 
 		String getRestaurantApiUrl = "http://ZUUL-GATEWAY/PAYMENT-GATEWAY/restaurant/getRestaurant"
 				+ orderRequest.getResturentId();
@@ -57,6 +57,8 @@ public class OrderManagementRestApi {
 		for (Object object : objects) {
 			restaurantModel = (RestaurantModel) object;
 		}
+		// rest call to get particular restaurant is delivered food for
+		// particular given delivered address
 
 		String validateRestaurantApiUrl = "http://ZUUL-GATEWAY/PAYMENT-GATEWAY/restaurant/validate"
 				+ orderRequest.getResturentId() + orderRequest.getAddress().getLatitude()
@@ -65,13 +67,13 @@ public class OrderManagementRestApi {
 		ResponseStatusModel validateRestaurantResponse = template.getForObject(validateRestaurantApiUrl,
 
 				ResponseStatusModel.class);
-		// check Resturent provide food for user given place;
+		// check Restaurant provide food for user given place;
 		if (validateRestaurantResponse.getMessage().equals("failure")) {
 			// throw exception
 			throw new OrderManagementServiceException("Resturent not provide the delivery for the given address ");
 		}
 		double totalPrice = orderFoodInfoService.priceCalculation(orderRequest.getFoodItems());
-		// validate minmum price
+		// validate minimum price
 		if (totalPrice < Double.parseDouble((restaurantModel.getMinimumOrder()))) {
 			// throw Exception
 			throw new OrderManagementServiceException(
@@ -86,7 +88,7 @@ public class OrderManagementRestApi {
 		OrderDetails orderDetails = RequestBundle.orderDetailsRequstBuilder(savedDeliveryInfo, orderRequest,
 				totalPrice);
 		OrderDetails savedOrderDetails = orderDetailsService.create(orderDetails);
-		// To perfome orderFoodInfo creation one by one.
+		// To orderFoodInfo creation one by one.
 		List<OrderFoodInfo> listOfOrderFoodInfo = new ArrayList<OrderFoodInfo>();
 
 		for (OrderFoodInfo orderFoodInfo : orderRequest.getFoodItems()) {
@@ -98,8 +100,7 @@ public class OrderManagementRestApi {
 
 		ResponseStatusModel responseStatusModel = new ResponseStatusModel();
 		responseStatusModel.setStatus("200");
-		// responseStatusModel.setData(responseStatusModel.setMessage("order
-		// will reach you within 45 minutes"));
+		responseStatusModel.setMessage("order will reach you within 45 minutes");
 		responseStatusModel.setOrderId(orderDetails.getOrderId());
 		return responseStatusModel;
 	}
@@ -110,4 +111,5 @@ public class OrderManagementRestApi {
 		// return orderService.createOrder(order);
 		return null;
 	}
+	
 }
