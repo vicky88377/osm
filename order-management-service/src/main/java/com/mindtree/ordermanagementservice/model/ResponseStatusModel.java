@@ -13,11 +13,16 @@ public class ResponseStatusModel {
 
 	private String status;
 
+	private Object[] data;
 	@JsonProperty(required = false)
 
 	private String message;
 
-	private Object[] data;
+	public ResponseStatusModel() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 	@JsonProperty(required = false)
 	private int OrderId;
 
@@ -31,6 +36,14 @@ public class ResponseStatusModel {
 
 		return statusCode;
 
+	}
+
+	public ResponseStatusModel(int statusCode, String status, String message, Object[] data) {
+		super();
+		this.statusCode = statusCode;
+		this.status = status;
+		this.message = message;
+		this.data = data;
 	}
 
 	/**

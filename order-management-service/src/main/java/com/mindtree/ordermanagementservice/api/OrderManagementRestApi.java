@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.mindtree.ordermanagementservice.bundle.RequestBundle;
+import com.mindtree.ordermanagementservice.exception.OrderManagementServiceException;
 import com.mindtree.ordermanagementservice.model.DeliveryInfo;
 import com.mindtree.ordermanagementservice.model.OrderDetails;
 import com.mindtree.ordermanagementservice.model.OrderFoodInfo;
@@ -35,6 +37,11 @@ public class OrderManagementRestApi {
 	DeliveryInfoService deliveryInfoService;
 	@Autowired
 	private RestTemplate template;
+
+	@Bean
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
+	}
 
 	@RequestMapping(value = "/order/create", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.CREATED)
@@ -61,11 +68,15 @@ public class OrderManagementRestApi {
 		// check Resturent provide food for user given place;
 		if (validateRestaurantResponse.getMessage().equals("failure")) {
 			// throw exception
+			throw new OrderManagementServiceException("Resturent not provide the delivery for the given address ");
 		}
 		double totalPrice = orderFoodInfoService.priceCalculation(orderRequest.getFoodItems());
 		// validate minmum price
 		if (totalPrice < Double.parseDouble((restaurantModel.getMinimumOrder()))) {
 			// throw Exception
+			throw new OrderManagementServiceException(
+					"minimum order should grater than " + Double.parseDouble((restaurantModel.getMinimumOrder())));
+
 		}
 		// create deliveryinfo Records
 		DeliveryInfo deliveryInfo = RequestBundle.deliveryInfoRequstBuilder(orderRequest);
@@ -83,9 +94,12 @@ public class OrderManagementRestApi {
 			OrderFoodInfo saveOrderFoodInfo = orderFoodInfoService.create(orderFoodInfo);
 			listOfOrderFoodInfo.add(saveOrderFoodInfo);
 		}
+		// Object
+
 		ResponseStatusModel responseStatusModel = new ResponseStatusModel();
 		responseStatusModel.setStatus("200");
-		responseStatusModel.setMessage("order will reach you within 45 minutes");
+		// responseStatusModel.setData(responseStatusModel.setMessage("order
+		// will reach you within 45 minutes"));
 		responseStatusModel.setOrderId(orderDetails.getOrderId());
 		return responseStatusModel;
 	}
