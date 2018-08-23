@@ -24,5 +24,4 @@ public class OrderManagementServiceApplication {
 				.apis(RequestHandlerSelectors.basePackage("com.mindtree.ordermanagementservice.api"))
 				.paths(PathSelectors.any()).build();
 	} 
-	
 }
