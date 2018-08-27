@@ -16,8 +16,14 @@ public class DeliveryInfoServiceImpl implements DeliveryInfoService {
 	@Override
 	public DeliveryInfo create(DeliveryInfo deliveryInfo) {
 		DeliveryInfo savedDeliveryInfo = deliveryInfoRepository.save(deliveryInfo);
+		System.out.println("Print :: " + savedDeliveryInfo.getDeliveryId());
 		return savedDeliveryInfo;
 	}
 
-	
+	@Override
+	public DeliveryInfo getDeliveryInfoByDeliveryId(int deliveryId) {
+		DeliveryInfo deliveryInfo = deliveryInfoRepository.getOne(deliveryId);
+		return deliveryInfo;
+	}
+
 }

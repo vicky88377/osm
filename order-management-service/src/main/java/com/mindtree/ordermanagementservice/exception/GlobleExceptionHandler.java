@@ -12,12 +12,14 @@ import com.mindtree.ordermanagementservice.model.ResponseStatusModel;
 public class GlobleExceptionHandler {
 	@ExceptionHandler(OrderManagementServiceException.class)
 	public ResponseEntity<ResponseStatusModel> customException(OrderManagementServiceException e) {
-		return new ResponseEntity<>(new ResponseStatusModel(404, "failed", e.getMessage(), null,e.getOrderId()), HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(new ResponseStatusModel(404, "failed", e.getMessage(), null, e.getOrderId()),
+				HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(HttpMessageNotReadableException.class)
 	public ResponseEntity<ResponseStatusModel> incorrectJSONFormat() {
-		return new ResponseEntity<>(new ResponseStatusModel(400, "failed", "Incorrect JSON format", null,0),
+		return new ResponseEntity<>(new ResponseStatusModel(400, "failed", "Incorrect JSON format", null, 0),
 				HttpStatus.BAD_REQUEST);
 	}
+
 }

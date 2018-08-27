@@ -1,25 +1,40 @@
 package com.mindtree.ordermanagementservice.model;
 
+import java.io.Serializable;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+//@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class ResponseStatusModel {
 
-
 	private int statusCode;
+
+	public ResponseStatusModel(int statusCode, String status, Object data, String message, int orderId) {
+		super();
+		this.statusCode = statusCode;
+		this.status = status;
+		this.data = data;
+		this.message = message;
+		this.orderId = orderId;
+	}
+
 	private String status;
-	private Object[] data;
+	@JsonProperty(required = false)
+	private int orderId;
 	@JsonProperty(required = false)
 	private String message;
+	private Object data;
+
+	@JsonProperty(required = false)
+	private DeliveryInfo deliveryInfo;
 
 	public ResponseStatusModel() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	@JsonProperty(required = false)
-	private int orderId;
 
 	/**
 	 * 
@@ -31,15 +46,6 @@ public class ResponseStatusModel {
 
 		return statusCode;
 
-	}
-
-	public ResponseStatusModel(int statusCode, String status, String message, Object[] data,int orderId) {
-		super();
-		this.statusCode = statusCode;
-		this.status = status;
-		this.message = message;
-		this.data = data;
-		this.orderId = orderId;
 	}
 
 	/**
@@ -108,38 +114,28 @@ public class ResponseStatusModel {
 
 	}
 
-	/**
-	 * 
-	 * @return the data
-	 * 
-	 */
-
-	public Object[] getData() {
-
-		return data;
-
-	}
-
-	/**
-	 * 
-	 * @param data
-	 * 
-	 *            the data to set
-	 * 
-	 */
-
-	public void setData(Object[] data) {
-
-		this.data = data;
-
-	}
-
 	public int getOrderId() {
 		return orderId;
 	}
 
 	public void setOrderId(int orderId) {
 		this.orderId = orderId;
+	}
+
+	public Object getData() {
+		return data;
+	}
+
+	public void setData(Object data) {
+		this.data = data;
+	}
+
+	public DeliveryInfo getDeliveryInfo() {
+		return deliveryInfo;
+	}
+
+	public void setDeliveryInfo(DeliveryInfo deliveryInfo) {
+		this.deliveryInfo = deliveryInfo;
 	}
 
 }

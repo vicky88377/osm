@@ -25,7 +25,8 @@ public class RequestBundle {
 			double toatalPrice) {
 		OrderDetails orderDetails = new OrderDetails();
 		orderDetails.setCustomerId(Integer.parseInt(orderRequest.getAddress().getUserId()));
-		orderDetails.setDeliveryId(deliveryInfo.getId());
+		System.out.println("delivery  :" + deliveryInfo.getDeliveryId());
+		orderDetails.setDeliveryId(deliveryInfo.getDeliveryId());
 
 		Date date = new Date();
 		orderDetails.setOrderDate(new Timestamp(date.getTime()));

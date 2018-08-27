@@ -1,29 +1,33 @@
 package com.mindtree.ordermanagementservice.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="delivery_info")
 public class DeliveryInfo {
 	@Id
-	@GeneratedValue
-	private int id;
-	private String deliveryBoyName;
+	@Column(name="delivery_id")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int deliveryId;
+	@Column(name="delivery_boy_name")
+	private String deliveryBoyName;  
+	@Column(name="delivery_boy_contact_number")
 	private long deliveryBoyContactNumber;
+	@Column(name="delivery_address")
 	private String deliveryAddress;
+	@Column(name="delivery_status")
 	private int deliveryStatus;
+	@Column(name="latitude")
 	private String latitude;
-
+	@Column(name="longitude")
 	private String longitude;
 
-	public int getId() {
-		return id;
-	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	public String getDeliveryBoyName() {
 		return deliveryBoyName;
@@ -71,6 +75,14 @@ public class DeliveryInfo {
 
 	public void setLongitude(String longitude) {
 		this.longitude = longitude;
+	}
+
+	public int getDeliveryId() {
+		return deliveryId;
+	}
+
+	public void setDeliveryId(int deliveryId) {
+		this.deliveryId = deliveryId;
 	}
 
 }

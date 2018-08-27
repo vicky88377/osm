@@ -30,4 +30,10 @@ public class OrderFoodInfoServiceImpl implements OrderFoodInfoService {
 		OrderFoodInfo saveOrderFoodInfo = orderFoodInfoReposityory.save(orderFoodInfo);
 		return saveOrderFoodInfo;
 	}
+
+	@Override
+	public List<OrderFoodInfo> getListOfFoodItemsOrder(int orderId) {
+		List<OrderFoodInfo> listOfFoodItems = orderFoodInfoReposityory.findOrderFoodInfosByOrderId(orderId);
+		return listOfFoodItems;
+	}
 }
