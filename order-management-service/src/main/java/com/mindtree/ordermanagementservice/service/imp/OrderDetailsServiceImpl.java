@@ -21,7 +21,7 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
 	@Override
 	public OrderDetails create(OrderDetails orderDetails) {
 		OrderDetails saveOrderDetails = orderDetailsRepository.save(orderDetails);
-		System.out.println("Save Order  ::" + saveOrderDetails.getOrderId());
+		
 		return saveOrderDetails;
 	}
 
@@ -35,7 +35,7 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
 			order = orderDetail.get();
 
 			if (order.getOrderStatus().equals("P")) {
-				if (OrderMangementServiceUtil.getTimeDifference(order.getOrderDate()) >= 10) {
+				if (OrderMangementServiceUtil.getTimeDifference(order.getOrdredDate()) >= 10) {
 					throw new OrderManagementServiceException("Order can not be canceled after 10 mins of order placed",
 							order.getOrderId());
 				}
@@ -67,6 +67,28 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
 	public List<OrderDetails> getOrderDetailsByCustomerId(int customerId) {
 		List<OrderDetails> listOfOrderDetails = orderDetailsRepository.findOrderFoodInfosByCustomerId(customerId);
 		return listOfOrderDetails;
+	}
+
+	@Override
+	public OrderDetails update(int orderId, String status) {
+		OrderDetails order = null;
+		
+		Optional<OrderDetails> orderDetail = orderDetailsRepository.findById(orderId);
+
+		if (orderDetail.isPresent()) {
+			order = orderDetail.get();
+
+			if (order.getOrderStatus().equals("P")) {
+
+				order.setOrderStatus(status);
+				return orderDetailsRepository.save(order);
+			}
+
+		} else {
+			throw new OrderManagementServiceException("No Order present with requested order Id", orderId);
+		}
+
+		return order;
 	}
 
 }

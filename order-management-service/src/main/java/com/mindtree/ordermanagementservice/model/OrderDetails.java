@@ -10,24 +10,24 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name ="order_details")
+@Table(name = "order_details")
 public class OrderDetails {
 	@Id
-//	@GeneratedValue
-	@Column(name ="order_id")
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	// @GeneratedValue
+	@Column(name = "order_id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int orderId;
-	@Column(name ="customer_id")
+	@Column(name = "customer_id")
 	private int customerId;
-	@Column(name ="total_price")
+	@Column(name = "total_price")
 	private double totalPrice;
-	@Column(name ="delivery_id")
+	@Column(name = "delivery_id")
 	private int deliveryId;
-	@Column(name ="ordered_date")
-	private Date orderDate;
-	@Column(name ="restaurant_id")
+	@Column(name = "ordered_date")
+	private Date ordredDate;
+	@Column(name = "restaurant_id")
 	private int restaurentId;
-	@Column(name ="order_status")
+	@Column(name = "order_status")
 	private String orderStatus;
 
 	public String getOrderStatus() {
@@ -70,20 +70,20 @@ public class OrderDetails {
 		this.deliveryId = deliveryId;
 	}
 
-	public Date getOrderDate() {
-		return orderDate;
-	}
-
-	public void setOrderDate(Date orderDate) {
-		this.orderDate = orderDate;
-	}
-
 	public int getRestaurentId() {
 		return restaurentId;
 	}
 
 	public void setRestaurentId(int restaurentId) {
 		this.restaurentId = restaurentId;
+	}
+
+	public Date getOrdredDate() {
+		return ordredDate;
+	}
+
+	public void setOrdredDate(Date ordredDate) {
+		this.ordredDate = ordredDate;
 	}
 
 }

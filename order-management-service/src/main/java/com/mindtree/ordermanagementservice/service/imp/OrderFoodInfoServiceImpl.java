@@ -16,16 +16,6 @@ public class OrderFoodInfoServiceImpl implements OrderFoodInfoService {
 	OrderFoodInfoRpository orderFoodInfoReposityory;
 
 	@Override
-	public double priceCalculation(List<OrderFoodInfo> orderFoodInfos) {
-		double totalPrice = 0.0;
-		for (OrderFoodInfo orderFoodInfo : orderFoodInfos) {
-			totalPrice = totalPrice + orderFoodInfo.getFoodPrice();
-		}
-
-		return totalPrice;
-	}
-
-	@Override
 	public OrderFoodInfo create(OrderFoodInfo orderFoodInfo) {
 		OrderFoodInfo saveOrderFoodInfo = orderFoodInfoReposityory.save(orderFoodInfo);
 		return saveOrderFoodInfo;

@@ -13,5 +13,7 @@ public interface OrderDetailsService {
 	public OrderDetails getOrderDetailsByOrderId(int orderId);
 
 	public List<OrderDetails> getOrderDetailsByCustomerId(int customerId);
+	
+	public OrderDetails update(int orderId,String status);
 
 }

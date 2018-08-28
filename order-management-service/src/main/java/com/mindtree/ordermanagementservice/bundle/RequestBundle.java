@@ -1,19 +1,22 @@
 package com.mindtree.ordermanagementservice.bundle;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-import com.mindtree.ordermanagementservice.model.Address;
+import com.mindtree.ordermanagementservice.dto.DeliveryAddress;
+import com.mindtree.ordermanagementservice.dto.OrderFoodInfoDto;
+import com.mindtree.ordermanagementservice.dto.OrderRequest;
 import com.mindtree.ordermanagementservice.model.DeliveryInfo;
 import com.mindtree.ordermanagementservice.model.OrderDetails;
 import com.mindtree.ordermanagementservice.model.OrderFoodInfo;
-import com.mindtree.ordermanagementservice.model.OrderRequest;
 
 public class RequestBundle {
 
 	public static DeliveryInfo deliveryInfoRequstBuilder(OrderRequest orderRequest) {
 		DeliveryInfo deliveryInfo = new DeliveryInfo();
-		Address address = orderRequest.getAddress();
+		DeliveryAddress address = orderRequest.getDeliveryaddress();
 		deliveryInfo.setDeliveryAddress(
 				address.getAddressLine1() + " " + address.getAddressLine2() + " " + address.getArea());
 		deliveryInfo.setLatitude(address.getLatitude());
@@ -24,12 +27,12 @@ public class RequestBundle {
 	public static OrderDetails orderDetailsRequstBuilder(DeliveryInfo deliveryInfo, OrderRequest orderRequest,
 			double toatalPrice) {
 		OrderDetails orderDetails = new OrderDetails();
-		orderDetails.setCustomerId(Integer.parseInt(orderRequest.getAddress().getUserId()));
-		System.out.println("delivery  :" + deliveryInfo.getDeliveryId());
+		orderDetails.setCustomerId((orderRequest.getCustomerDetails().getId()));
+		
 		orderDetails.setDeliveryId(deliveryInfo.getDeliveryId());
 
 		Date date = new Date();
-		orderDetails.setOrderDate(new Timestamp(date.getTime()));
+		orderDetails.setOrdredDate(new Timestamp(date.getTime()));
 		orderDetails.setRestaurentId(orderRequest.getResturentId());
 		orderDetails.setTotalPrice(toatalPrice);
 		orderDetails.setOrderStatus("P");
@@ -42,4 +45,29 @@ public class RequestBundle {
 		return orderFoodInfo;
 	}
 
+	public static List<OrderFoodInfo> getOrderdFoodInfoRequstBuilder(List<OrderFoodInfoDto> listOfOrderFoodInfoDto) {
+		List<OrderFoodInfo> listOfOrderFoodInfo = null;
+		if (listOfOrderFoodInfoDto != null && !listOfOrderFoodInfoDto.isEmpty()) {
+			for (OrderFoodInfoDto orderFoodInfoDto : listOfOrderFoodInfoDto)
+
+				if (orderFoodInfoDto != null) {
+
+					if (listOfOrderFoodInfo == null) {
+						listOfOrderFoodInfo = new ArrayList<OrderFoodInfo>();
+					}
+					OrderFoodInfo orderFoodInfo = new OrderFoodInfo();
+					orderFoodInfo.setFoodId(orderFoodInfoDto.getFoodId());
+					orderFoodInfo.setAdditionalInfo(orderFoodInfoDto.getAdditionalInfo());
+			
+
+					
+					orderFoodInfo.setQuantity(orderFoodInfoDto.getQuantity());
+
+					listOfOrderFoodInfo.add(orderFoodInfo);
+				}
+
+		}
+
+		return listOfOrderFoodInfo;
+	}
 }

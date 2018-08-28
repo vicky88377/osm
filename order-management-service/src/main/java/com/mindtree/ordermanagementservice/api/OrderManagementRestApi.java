@@ -16,16 +16,17 @@ import org.springframework.web.client.RestTemplate;
 
 import com.mindtree.ordermanagementservice.bundle.RequestBundle;
 import com.mindtree.ordermanagementservice.bundle.ResponseBundle;
+import com.mindtree.ordermanagementservice.dto.OrderRequest;
 import com.mindtree.ordermanagementservice.exception.OrderManagementServiceException;
 import com.mindtree.ordermanagementservice.model.DeliveryInfo;
 import com.mindtree.ordermanagementservice.model.OrderDetails;
 import com.mindtree.ordermanagementservice.model.OrderFoodInfo;
-import com.mindtree.ordermanagementservice.model.OrderRequest;
 import com.mindtree.ordermanagementservice.model.ResponseStatusModel;
 import com.mindtree.ordermanagementservice.model.RestaurantModel;
 import com.mindtree.ordermanagementservice.service.DeliveryInfoService;
 import com.mindtree.ordermanagementservice.service.OrderDetailsService;
 import com.mindtree.ordermanagementservice.service.OrderFoodInfoService;
+import com.mindtree.ordermanagementservice.util.OrderMangementServiceUtil;
 
 @RestController
 @RequestMapping("/ordermanagement")
@@ -45,38 +46,52 @@ public class OrderManagementRestApi {
 		return new RestTemplate();
 	}
 
-	@RequestMapping(value = "/order/create", method = RequestMethod.POST)
+	@RequestMapping(value = "/order", method = RequestMethod.POST)
 	// @ResponseStatus(value = HttpStatus.CREATED)
 	public ResponseStatusModel createOder(@RequestBody OrderRequest orderRequest) {
 		// rest call to other services to restaurant details best on the
 		// Restaurant id;
-		System.out.println("Rest create corder" + orderRequest.getResturentId());
+		// System.out.println("Rest create corder" +
+		// orderRequest.getResturentId());
 
-		Object[] resaray = new Object[1];
+		List<OrderFoodInfo> listOfOrderFood = new ArrayList<OrderFoodInfo>();
+		OrderFoodInfo orderFoodInfo1 = new OrderFoodInfo();
+		orderFoodInfo1.setAdditionalInfo("normal cooked chiken better spice nuts");
+		orderFoodInfo1.setFoodId(26);
+		orderFoodInfo1.setFoodPrice(278);
+
+		OrderFoodInfo orderFoodInfo2 = new OrderFoodInfo();
+		orderFoodInfo2.setAdditionalInfo("chiken better spice nuts");
+		orderFoodInfo2.setFoodId(27);
+		orderFoodInfo2.setFoodPrice(200);
+		listOfOrderFood.add(orderFoodInfo1);
+		listOfOrderFood.add(orderFoodInfo2);
+
+		Object resaray = new Object();
 		RestaurantModel res = new RestaurantModel();
 		res.setRestaurantId("101");
 		res.setLatitude("3224");
 		res.setLongitude("ew224");
-		res.setMinimumOrder("500");
-		resaray[0] = res;
+		res.setMinimumOrder("60");
+		resaray = res;
 
 		/*
 		 * String getRestaurantApiUrl =
 		 * "http://ZUUL-GATEWAY/PAYMENT-GATEWAY/restaurant/getRestaurant" +
 		 * orderRequest.getResturentId();
 		 */
-		ResponseStatusModel restaurantInfo = new ResponseStatusModel();
-		restaurantInfo.setStatusCode(200);
-		restaurantInfo.setStatus("succ");
-		restaurantInfo.setData(resaray);
+		ResponseStatusModel mockResponseStatusModel = new ResponseStatusModel();
+		mockResponseStatusModel.setStatusCode(200);
+		mockResponseStatusModel.setStatus("succ");
+		mockResponseStatusModel.setData(listOfOrderFood);
 
 		// ResponseStatusModel restaurantInfo =
 		// template.getForObject(getRestaurantApiUrl,
 		// ResponseStatusModel.class);
 		RestaurantModel restaurantModel = null;
-		System.out.println("Array loopinmg");
-		restaurantModel = (RestaurantModel) restaurantInfo.getData();
-		System.out.println("After loopinmg" + restaurantModel.getRestaurantId());
+		// restaurantModel = (RestaurantModel) restaurantInfo.getData();
+		// System.out.println("After loopinmg" +
+		// restaurantModel.getRestaurantId());
 		// rest call to get particular restaurant is delivered food for
 		// particular given delivered address
 
@@ -100,43 +115,52 @@ public class OrderManagementRestApi {
 			// throw exception
 			throw new OrderManagementServiceException("Resturent not provide the delivery for the given address", 0);
 		}
-		double totalPrice = orderFoodInfoService.priceCalculation(orderRequest.getFoodItems());
+		
+		
+		List<OrderFoodInfo> listOfOrderFoodInfo = RequestBundle
+				.getOrderdFoodInfoRequstBuilder(orderRequest.getFoodItems());
+		
+		
+		List<OrderFoodInfo> foodMenu = mockResponseStatusModel.getData();
+		
+		double totalPrice = OrderMangementServiceUtil.totalbillableprice(listOfOrderFoodInfo, foodMenu);
 
-		System.out.println("total price ::" + totalPrice);
-		System.out.println("minimum order price" + restaurantModel.getMinimumOrder());
+	/*	System.out.println("total price ::" + totalPrice);
+		System.out.println("minimum order price" + restaurantModel.getMinimumOrder());*/
 
 		// validate minimum price
-		if (totalPrice < Double.parseDouble((restaurantModel.getMinimumOrder()))) {
+		/*if (totalPrice < Double.parseDouble((restaurantModel.getMinimumOrder()))) {
 			// throw Exception
 			throw new OrderManagementServiceException(
 					"minimum order should grater than " + Double.parseDouble((restaurantModel.getMinimumOrder())), 0);
 
-		}
+		}*/
 
-		System.out.println("Start Db");
+		
 
 		// create deliveryinfo Records
 		DeliveryInfo deliveryInfo = RequestBundle.deliveryInfoRequstBuilder(orderRequest);
-		System.out.println("Start Db1" + deliveryInfo.getDeliveryAddress());
+		
 		DeliveryInfo savedDeliveryInfo = deliveryInfoService.create(deliveryInfo);
-		System.out.println("Start Db2" + savedDeliveryInfo.getDeliveryId());
+		
 
 		// create OrderDetails Records
 		OrderDetails orderDetails = RequestBundle.orderDetailsRequstBuilder(savedDeliveryInfo, orderRequest,
 				totalPrice);
 		OrderDetails savedOrderDetails = orderDetailsService.create(orderDetails);
 		// To orderFoodInfo creation one by one.
-		List<OrderFoodInfo> listOfOrderFoodInfo = new ArrayList<OrderFoodInfo>();
-		System.out.println("No of food Iteams" + orderRequest.getFoodItems().size());
+		List<OrderFoodInfo> saveListOfOrderFoodInfo = new ArrayList<OrderFoodInfo>();
+		
 
-		for (OrderFoodInfo orderFoodInfo : orderRequest.getFoodItems()) {
+		for (OrderFoodInfo orderFoodInfo : listOfOrderFoodInfo) {
+
 			orderFoodInfo.setOrderId(savedOrderDetails.getOrderId());
-			System.out.println("get foodInfo foodId" + orderFoodInfo.getFoodId());
+			
 			OrderFoodInfo saveOrderFoodInfo = orderFoodInfoService.create(orderFoodInfo);
-			System.out.println("get foodInfo OrderFoodId" + orderFoodInfo.getOrderFoodId());
+			
 
-			System.out.println();
-			listOfOrderFoodInfo.add(saveOrderFoodInfo);
+			
+			saveListOfOrderFoodInfo.add(saveOrderFoodInfo);
 		}
 		// Object
 		ResponseStatusModel responseStatusModel = new ResponseStatusModel();
@@ -147,33 +171,33 @@ public class OrderManagementRestApi {
 		return responseStatusModel;
 	}
 
-	@RequestMapping(value = "/order/view/{orderId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/order/{orderId}", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public ResponseStatusModel viewOder(@PathVariable int orderId) {
 		ResponseStatusModel responseStatusModel = null;
 		try {
 			OrderDetails orderDetails = orderDetailsService.getOrderDetailsByOrderId(orderId);
 
-			System.out.println(orderDetails.getOrderId());
+		
 
 			DeliveryInfo deliveryInfo = deliveryInfoService.getDeliveryInfoByDeliveryId(orderDetails.getDeliveryId());
 
-			System.out.println(deliveryInfo.getDeliveryAddress());
+	
 
 			List<OrderFoodInfo> listOfOrderFoodInfo = orderFoodInfoService.getListOfFoodItemsOrder(orderId);
 
-			System.out.println(listOfOrderFoodInfo.size());
+			
 
 			responseStatusModel = ResponseBundle.getViewOderResponsBuilder(orderDetails, deliveryInfo,
 					listOfOrderFoodInfo);
-			System.out.println("responseStatusModel" + responseStatusModel.getStatusCode());
+		
 			return responseStatusModel;
 		} catch (Exception e) {
 			throw new OrderManagementServiceException(" data not found in records  ", orderId);
 		}
 	}
 
-	@RequestMapping(value = "/order/all/{customerId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/orders/{customerId}", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public ResponseStatusModel viewOderHistory(@PathVariable int customerId) {
 		ResponseStatusModel responseStatusModel = null;
@@ -189,8 +213,7 @@ public class OrderManagementRestApi {
 		}
 	}
 
-	@RequestMapping(value = "/restaurant/cancelOrder/{orderId}", method = RequestMethod.GET)
-	// @ResponseStatus(value = HttpStatus.CREATED)
+	@RequestMapping(value = "/order/{orderId}", method = RequestMethod.DELETE)
 	public ResponseStatusModel cancelOrder(@PathVariable int orderId) {
 
 		OrderDetails orderDetail = orderDetailsService.cancelOrder(orderId);
@@ -199,6 +222,18 @@ public class OrderManagementRestApi {
 		responseStatusModel.setStatusCode(200);
 		responseStatusModel.setStatus("success");
 		responseStatusModel.setMessage("order has been canceled");
+		responseStatusModel.setOrderId(orderDetail.getOrderId());
+		return responseStatusModel;
+	}
+
+	@RequestMapping(value = "/orders/{orderId}/{orderStatus}", method = RequestMethod.PUT)
+	public ResponseStatusModel updateOrderStatus(@PathVariable int orderId, @PathVariable String orderStatus) {
+
+		OrderDetails orderDetail = orderDetailsService.update(orderId, orderStatus);
+
+		ResponseStatusModel responseStatusModel = new ResponseStatusModel();
+		responseStatusModel.setStatusCode(200);
+		responseStatusModel.setMessage("order has been updated");
 		responseStatusModel.setOrderId(orderDetail.getOrderId());
 		return responseStatusModel;
 	}

@@ -13,11 +13,11 @@ public class ResponseBundle {
 		ResponseStatusModel responseStatusModel = new ResponseStatusModel();
 		responseStatusModel.setOrderId(orderDetails.getOrderId());
 		responseStatusModel.setStatusCode(200);
-		System.out.println("Set Data");
-		responseStatusModel.setData(listOfOrderFoodInfo);
-		System.out.println("Set delevery");
+		
+		responseStatusModel.setData((listOfOrderFoodInfo));
+		
 		responseStatusModel.setDeliveryInfo(deliveryInfo);
-		System.out.println("return");
+		
 		return responseStatusModel;
 	}
 

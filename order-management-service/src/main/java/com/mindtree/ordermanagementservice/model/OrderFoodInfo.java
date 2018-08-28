@@ -13,7 +13,8 @@ public class OrderFoodInfo {
 	private String additionalInfo;
 	private int foodId;
 	private int orderId;
-	private float foodPrice;
+	private double foodPrice;
+	
 
 	public int getOrderFoodId() {
 		return orderFoodId;
@@ -55,12 +56,13 @@ public class OrderFoodInfo {
 		this.orderId = orderId;
 	}
 
-	public float getFoodPrice() {
+	public double getFoodPrice() {
 		return foodPrice;
 	}
 
-	public void setFoodPrice(float foodPrice) {
+	public void setFoodPrice(double foodPrice) {
 		this.foodPrice = foodPrice;
 	}
 
+	
 }

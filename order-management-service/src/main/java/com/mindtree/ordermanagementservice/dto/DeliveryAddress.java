@@ -1,9 +1,7 @@
-package com.mindtree.ordermanagementservice.model;
+package com.mindtree.ordermanagementservice.dto;
 
-public class Address {
-
-	private String userId;
-	private String userName;
+public class DeliveryAddress {
+	
 	private String emailId;
 	private String area;
 	private String contactNo;
@@ -12,21 +10,6 @@ public class Address {
 	private String latitude;
 	private String longitude;
 
-	public String getUserId() {
-		return userId;
-	}
-
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
 
 	public String getEmailId() {
 		return emailId;

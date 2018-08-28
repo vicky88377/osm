@@ -1,6 +1,6 @@
 package com.mindtree.ordermanagementservice.model;
 
-import java.io.Serializable;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,27 +11,26 @@ public class ResponseStatusModel {
 
 	private int statusCode;
 
-	public ResponseStatusModel(int statusCode, String status, Object data, String message, int orderId) {
-		super();
-		this.statusCode = statusCode;
-		this.status = status;
-		this.data = data;
-		this.message = message;
-		this.orderId = orderId;
-	}
-
 	private String status;
 	@JsonProperty(required = false)
 	private int orderId;
 	@JsonProperty(required = false)
 	private String message;
-	private Object data;
+	private List data;
 
 	@JsonProperty(required = false)
 	private DeliveryInfo deliveryInfo;
 
 	public ResponseStatusModel() {
 		super();
+	}
+
+	public ResponseStatusModel(int statusCode, String status, Object data, String message, int orderId) {
+		super();
+		this.statusCode = statusCode;
+		this.status = status;
+		this.message = message;
+		this.orderId = orderId;
 	}
 
 	@JsonProperty(required = false)
@@ -122,14 +121,6 @@ public class ResponseStatusModel {
 		this.orderId = orderId;
 	}
 
-	public Object getData() {
-		return data;
-	}
-
-	public void setData(Object data) {
-		this.data = data;
-	}
-
 	public DeliveryInfo getDeliveryInfo() {
 		return deliveryInfo;
 	}
@@ -137,5 +128,15 @@ public class ResponseStatusModel {
 	public void setDeliveryInfo(DeliveryInfo deliveryInfo) {
 		this.deliveryInfo = deliveryInfo;
 	}
+
+	public List getData() {
+		return data;
+	}
+
+	public void setData(List data) {
+		this.data = data;
+	}
+
+
 
 }
