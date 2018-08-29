@@ -115,34 +115,35 @@ public class OrderManagementRestApi {
 			// throw exception
 			throw new OrderManagementServiceException("Resturent not provide the delivery for the given address", 0);
 		}
-		
-		
+
 		List<OrderFoodInfo> listOfOrderFoodInfo = RequestBundle
 				.getOrderdFoodInfoRequstBuilder(orderRequest.getFoodItems());
-		
-		
+
 		List<OrderFoodInfo> foodMenu = mockResponseStatusModel.getData();
-		
+
 		double totalPrice = OrderMangementServiceUtil.totalbillableprice(listOfOrderFoodInfo, foodMenu);
 
-	/*	System.out.println("total price ::" + totalPrice);
-		System.out.println("minimum order price" + restaurantModel.getMinimumOrder());*/
+		/*
+		 * System.out.println("total price ::" + totalPrice);
+		 * System.out.println("minimum order price" +
+		 * restaurantModel.getMinimumOrder());
+		 */
 
 		// validate minimum price
-		/*if (totalPrice < Double.parseDouble((restaurantModel.getMinimumOrder()))) {
-			// throw Exception
-			throw new OrderManagementServiceException(
-					"minimum order should grater than " + Double.parseDouble((restaurantModel.getMinimumOrder())), 0);
-
-		}*/
-
-		
+		/*
+		 * if (totalPrice <
+		 * Double.parseDouble((restaurantModel.getMinimumOrder()))) { // throw
+		 * Exception throw new OrderManagementServiceException(
+		 * "minimum order should grater than " +
+		 * Double.parseDouble((restaurantModel.getMinimumOrder())), 0);
+		 * 
+		 * }
+		 */
 
 		// create deliveryinfo Records
 		DeliveryInfo deliveryInfo = RequestBundle.deliveryInfoRequstBuilder(orderRequest);
-		
+
 		DeliveryInfo savedDeliveryInfo = deliveryInfoService.create(deliveryInfo);
-		
 
 		// create OrderDetails Records
 		OrderDetails orderDetails = RequestBundle.orderDetailsRequstBuilder(savedDeliveryInfo, orderRequest,
@@ -150,16 +151,13 @@ public class OrderManagementRestApi {
 		OrderDetails savedOrderDetails = orderDetailsService.create(orderDetails);
 		// To orderFoodInfo creation one by one.
 		List<OrderFoodInfo> saveListOfOrderFoodInfo = new ArrayList<OrderFoodInfo>();
-		
 
 		for (OrderFoodInfo orderFoodInfo : listOfOrderFoodInfo) {
 
 			orderFoodInfo.setOrderId(savedOrderDetails.getOrderId());
-			
-			OrderFoodInfo saveOrderFoodInfo = orderFoodInfoService.create(orderFoodInfo);
-			
 
-			
+			OrderFoodInfo saveOrderFoodInfo = orderFoodInfoService.create(orderFoodInfo);
+
 			saveListOfOrderFoodInfo.add(saveOrderFoodInfo);
 		}
 		// Object
@@ -177,20 +175,10 @@ public class OrderManagementRestApi {
 		ResponseStatusModel responseStatusModel = null;
 		try {
 			OrderDetails orderDetails = orderDetailsService.getOrderDetailsByOrderId(orderId);
-
-		
-
 			DeliveryInfo deliveryInfo = deliveryInfoService.getDeliveryInfoByDeliveryId(orderDetails.getDeliveryId());
-
-	
-
 			List<OrderFoodInfo> listOfOrderFoodInfo = orderFoodInfoService.getListOfFoodItemsOrder(orderId);
-
-			
-
 			responseStatusModel = ResponseBundle.getViewOderResponsBuilder(orderDetails, deliveryInfo,
 					listOfOrderFoodInfo);
-		
 			return responseStatusModel;
 		} catch (Exception e) {
 			throw new OrderManagementServiceException(" data not found in records  ", orderId);
@@ -203,6 +191,7 @@ public class OrderManagementRestApi {
 		ResponseStatusModel responseStatusModel = null;
 		try {
 			List<OrderDetails> orderDetailsList = orderDetailsService.getOrderDetailsByCustomerId(customerId);
+
 			if (orderDetailsList.size() <= 0) {
 				throw new OrderManagementServiceException(" data not found in records  ", customerId);
 			}
@@ -217,7 +206,6 @@ public class OrderManagementRestApi {
 	public ResponseStatusModel cancelOrder(@PathVariable int orderId) {
 
 		OrderDetails orderDetail = orderDetailsService.cancelOrder(orderId);
-
 		ResponseStatusModel responseStatusModel = new ResponseStatusModel();
 		responseStatusModel.setStatusCode(200);
 		responseStatusModel.setStatus("success");
