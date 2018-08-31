@@ -43,7 +43,7 @@ public class DeliveryInfoServiceImplTest {
 		deliveryInfo1.setDeliveryBoyContactNumber(809928272);
 		deliveryInfo1.setDeliveryBoyName("raju");
 		deliveryInfo1.setDeliveryId(89);
-		deliveryInfo1.setDeliveryStatus(0);
+		deliveryInfo1.setDeliveryStatus("C");
 		deliveryInfo1.setLatitude("24345");
 		deliveryInfo1.setLongitude("sj2q23");
 
@@ -52,7 +52,7 @@ public class DeliveryInfoServiceImplTest {
 		deliveryInfo2.setDeliveryBoyContactNumber(809928272);
 		deliveryInfo2.setDeliveryBoyName("raju");
 		deliveryInfo2.setDeliveryId(89);
-		deliveryInfo2.setDeliveryStatus(0);
+		deliveryInfo2.setDeliveryStatus("C");
 		deliveryInfo2.setLatitude("24345");
 		deliveryInfo2.setLongitude("sj2q23");
 
@@ -71,7 +71,7 @@ public class DeliveryInfoServiceImplTest {
 	@Test
 	public void createTest() {
 		DeliveryInfo deliveryInfo = deliveryInfoService.create(deliveryInfo1);
-		assertThat(deliveryInfo.getDeliveryStatus() == 0);
+		assertThat(deliveryInfo.getDeliveryStatus().equals("C")) ;
 		assertThat(deliveryInfo.getDeliveryId() == 89);
 	}
 }

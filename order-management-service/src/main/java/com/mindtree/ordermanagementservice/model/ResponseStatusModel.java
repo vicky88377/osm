@@ -2,6 +2,7 @@ package com.mindtree.ordermanagementservice.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -13,11 +14,12 @@ public class ResponseStatusModel {
 
 	private String status;
 	@JsonProperty(required = false)
-	private int orderId;
+	@JsonIgnore
+	private Integer orderId;
 	@JsonProperty(required = false)
 	private String message;
 	private List data;
-
+  
 	@JsonProperty(required = false)
 	private DeliveryInfo deliveryInfo;
 
@@ -113,11 +115,11 @@ public class ResponseStatusModel {
 
 	}
 
-	public int getOrderId() {
+	public Integer getOrderId() {
 		return orderId;
 	}
 
-	public void setOrderId(int orderId) {
+	public void setOrderId(Integer orderId) {
 		this.orderId = orderId;
 	}
 

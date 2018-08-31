@@ -1,5 +1,7 @@
 package com.mindtree.ordermanagementservice.model;
 
+//import java.sql.Date;
+
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -25,6 +27,7 @@ public class OrderDetails {
 	private int deliveryId;
 	@Column(name = "ordered_date")
 	private Date ordredDate;
+	
 	@Column(name = "restaurant_id")
 	private int restaurentId;
 	@Column(name = "order_status")

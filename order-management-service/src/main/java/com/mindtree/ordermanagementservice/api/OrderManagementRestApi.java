@@ -40,7 +40,7 @@ public class OrderManagementRestApi {
 	DeliveryInfoService deliveryInfoService;
 	@Autowired
 	private RestTemplate template;
-
+  
 	@Bean
 	public RestTemplate restTemplate() {
 		return new RestTemplate();
@@ -51,8 +51,9 @@ public class OrderManagementRestApi {
 	public ResponseStatusModel createOder(@RequestBody OrderRequest orderRequest) {
 		// rest call to other services to restaurant details best on the
 		// Restaurant id;
-		// System.out.println("Rest create corder" +
-		// orderRequest.getResturentId());
+		System.out.println("Rest create corder" + orderRequest.getResturentId());
+		
+		
 
 		List<OrderFoodInfo> listOfOrderFood = new ArrayList<OrderFoodInfo>();
 		OrderFoodInfo orderFoodInfo1 = new OrderFoodInfo();
@@ -67,13 +68,13 @@ public class OrderManagementRestApi {
 		listOfOrderFood.add(orderFoodInfo1);
 		listOfOrderFood.add(orderFoodInfo2);
 
-		Object resaray = new Object();
-		RestaurantModel res = new RestaurantModel();
-		res.setRestaurantId("101");
-		res.setLatitude("3224");
-		res.setLongitude("ew224");
-		res.setMinimumOrder("60");
-		resaray = res;
+		// Object resaray = new Object();
+		// RestaurantModel res = new RestaurantModel();
+		// res.setRestaurantId("101");
+		// res.setLatitude("3224");
+		// res.setLongitude("ew224");
+		// res.setMinimumOrder("60");
+		// resaray = res;
 
 		/*
 		 * String getRestaurantApiUrl =
@@ -189,17 +190,17 @@ public class OrderManagementRestApi {
 	@ResponseStatus(value = HttpStatus.CREATED)
 	public ResponseStatusModel viewOderHistory(@PathVariable int customerId) {
 		ResponseStatusModel responseStatusModel = null;
-		try {
+		//try {
 			List<OrderDetails> orderDetailsList = orderDetailsService.getOrderDetailsByCustomerId(customerId);
 
 			if (orderDetailsList.size() <= 0) {
-				throw new OrderManagementServiceException(" data not found in records  ", customerId);
+				throw new OrderManagementServiceException("data not found in records", customerId);
 			}
 			responseStatusModel = ResponseBundle.getViewAllOderResponsBuilder(orderDetailsList);
 			return responseStatusModel;
-		} catch (Exception e) {
-			throw new OrderManagementServiceException(" data not found in records  ", customerId);
-		}
+	//	} catch (Exception e) {
+		//	throw new OrderManagementServiceException(" data not found in records  ", customerId);
+		//}
 	}
 
 	@RequestMapping(value = "/order/{orderId}", method = RequestMethod.DELETE)

@@ -27,17 +27,17 @@ public class OrderMangementServiceUtil {
 		return min;
 	}
 
-	public static double totalbillableprice(List<OrderFoodInfo> customerOderFoodList, List<OrderFoodInfo> foodMenu) {
-		Map<Integer, Double> foodIdToFoodPrice = null;
-		
-		System.out.println("totalbillableprice") ;
-		
-		
+	public static double totalbillableprice(List<OrderFoodInfo> customerOrderFoodList, List<OrderFoodInfo> foodMenu) {
+		Map<Integer, Double> foodIdToFoodPrice = null;		
 		double totalPrice = 0.0;
-		if (foodMenu != null && customerOderFoodList != null) {
+		if (foodMenu != null && customerOrderFoodList != null) {
 			for (OrderFoodInfo foodInfo : foodMenu) {
 				if (foodIdToFoodPrice == null) {
 					foodIdToFoodPrice = new HashMap<Integer, Double>();
+					
+					System.out.println("### " + foodInfo.getFoodId() + " $$ " + foodInfo.getFoodPrice() );
+					
+					
 					foodIdToFoodPrice.put(foodInfo.getFoodId(), foodInfo.getFoodPrice());
 					
 					
@@ -46,11 +46,12 @@ public class OrderMangementServiceUtil {
 			
 			}
 
-			for (OrderFoodInfo customerOrderFood : customerOderFoodList) {
+			for (OrderFoodInfo customerOrderFood : customerOrderFoodList) {
 			
 				double price = foodIdToFoodPrice.get(customerOrderFood.getFoodId());
+				customerOrderFood.setFoodPrice(price);
 				totalPrice = totalPrice + (price * customerOrderFood.getQuantity());
-			
+			System.out.println("totalPrice :: " + totalPrice);
 			}
 
 		}

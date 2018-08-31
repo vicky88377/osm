@@ -12,7 +12,7 @@ import com.mindtree.ordermanagementservice.model.ResponseStatusModel;
 public class GlobleExceptionHandler {
 	@ExceptionHandler(OrderManagementServiceException.class)
 	public ResponseEntity<ResponseStatusModel> customException(OrderManagementServiceException e) {
-		return new ResponseEntity<>(new ResponseStatusModel(404, "failed", e.getMessage(), null, e.getOrderId()),
+		return new ResponseEntity<>(new ResponseStatusModel(404, "failed", null, e.getMessage(), e.getOrderId()),
 				HttpStatus.BAD_REQUEST);
 	}
 

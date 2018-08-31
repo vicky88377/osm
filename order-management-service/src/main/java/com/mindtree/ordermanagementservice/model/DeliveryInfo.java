@@ -24,7 +24,7 @@ public class DeliveryInfo {
 	@Column(name="delivery_address")
 	private String deliveryAddress;
 	@Column(name="delivery_status")
-	private int deliveryStatus;
+	private String deliveryStatus;
 	@Column(name="latitude")
 	private String latitude;
 	@Column(name="longitude")
@@ -56,11 +56,11 @@ public class DeliveryInfo {
 		this.deliveryAddress = deliveryAddress;
 	}
 
-	public int getDeliveryStatus() {
+	public String getDeliveryStatus() {
 		return deliveryStatus;
 	}
 
-	public void setDeliveryStatus(int deliveryStatus) {
+	public void setDeliveryStatus(String deliveryStatus) {
 		this.deliveryStatus = deliveryStatus;
 	}
 

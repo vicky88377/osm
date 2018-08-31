@@ -28,12 +28,11 @@ public class RequestBundle {
 			double toatalPrice) {
 		OrderDetails orderDetails = new OrderDetails();
 		orderDetails.setCustomerId((orderRequest.getCustomerDetails().getId()));
-		
 		orderDetails.setDeliveryId(deliveryInfo.getDeliveryId());
-
 		Date date = new Date();
 		orderDetails.setOrdredDate(new Timestamp(date.getTime()));
 		orderDetails.setRestaurentId(orderRequest.getResturentId());
+		System.out.println("resturentId" + orderDetails.getRestaurentId() + "===" + orderRequest.getResturentId());
 		orderDetails.setTotalPrice(toatalPrice);
 		orderDetails.setOrderStatus("P");
 		return orderDetails;
@@ -58,16 +57,11 @@ public class RequestBundle {
 					OrderFoodInfo orderFoodInfo = new OrderFoodInfo();
 					orderFoodInfo.setFoodId(orderFoodInfoDto.getFoodId());
 					orderFoodInfo.setAdditionalInfo(orderFoodInfoDto.getAdditionalInfo());
-			
-
-					
 					orderFoodInfo.setQuantity(orderFoodInfoDto.getQuantity());
 
 					listOfOrderFoodInfo.add(orderFoodInfo);
 				}
-
 		}
-
 		return listOfOrderFoodInfo;
 	}
 }

@@ -4,14 +4,18 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class OrderFoodInfo {
 	@Id
 	@GeneratedValue
+	@JsonIgnore
 	private int orderFoodId;
 	private int quantity;
 	private String additionalInfo;
 	private int foodId;
+	@JsonIgnore
 	private int orderId;
 	private double foodPrice;
 	

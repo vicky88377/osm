@@ -5,7 +5,6 @@ public class OrderFoodInfoDto {
 	private int quantity;
 	private String additionalInfo;
 	private int foodId;
-	
 
 	public int getQuantity() {
 		return quantity;
@@ -30,6 +29,5 @@ public class OrderFoodInfoDto {
 	public void setFoodId(int foodId) {
 		this.foodId = foodId;
 	}
-
 
 }
