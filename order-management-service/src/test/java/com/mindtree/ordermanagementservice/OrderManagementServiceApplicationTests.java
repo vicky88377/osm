@@ -245,7 +245,7 @@ public class OrderManagementServiceApplicationTests {
 			OrderManagementServiceException orderManagementServiceExceptionObj = new OrderManagementServiceException();
 			ResponseEntity<ResponseStatusModel> responseEntity= null;
 			
-			orderManagementServiceExceptionObj.setMessage("error Message");
+		// orderManagementServiceExceptionObj.setS);;
 			
 			responseEntity = globalException.customException(orderManagementServiceExceptionObj);
 			

@@ -6,6 +6,7 @@ public class OrderRequest {
 	private DeliveryAddress deliveryaddress;
 	private CustomerDetailsDto customerDetails;
 	private int resturentId;
+	private String paymentMode;
 	List<OrderFoodInfoDto> foodItems;
 
 	public int getResturentId() {
@@ -38,6 +39,14 @@ public class OrderRequest {
 
 	public void setCustomerDetails(CustomerDetailsDto customerDetails) {
 		this.customerDetails = customerDetails;
+	}
+
+	public String getPaymentMode() {
+		return paymentMode;
+	}
+
+	public void setPaymentMode(String paymentMode) {
+		this.paymentMode = paymentMode;
 	}
 
 }

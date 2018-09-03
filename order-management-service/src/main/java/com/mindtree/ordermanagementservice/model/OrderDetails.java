@@ -32,6 +32,9 @@ public class OrderDetails {
 	private int restaurentId;
 	@Column(name = "order_status")
 	private String orderStatus;
+	
+	@Column(name = "payment_mode")
+	private String paymentMode;
 
 	public String getOrderStatus() {
 		return orderStatus;
@@ -87,6 +90,14 @@ public class OrderDetails {
 
 	public void setOrdredDate(Date ordredDate) {
 		this.ordredDate = ordredDate;
+	}
+
+	public String getPaymentMode() {
+		return paymentMode;
+	}
+
+	public void setPaymentMode(String paymentMode) {
+		this.paymentMode = paymentMode;
 	}
 
 }

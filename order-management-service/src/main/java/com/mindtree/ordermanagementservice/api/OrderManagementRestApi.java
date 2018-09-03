@@ -2,12 +2,14 @@ package com.mindtree.ordermanagementservice.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -22,10 +24,11 @@ import com.mindtree.ordermanagementservice.model.DeliveryInfo;
 import com.mindtree.ordermanagementservice.model.OrderDetails;
 import com.mindtree.ordermanagementservice.model.OrderFoodInfo;
 import com.mindtree.ordermanagementservice.model.ResponseStatusModel;
-import com.mindtree.ordermanagementservice.model.RestaurantModel;
+import com.mindtree.ordermanagementservice.model.ResturentFoodManuApiResponse;
 import com.mindtree.ordermanagementservice.service.DeliveryInfoService;
 import com.mindtree.ordermanagementservice.service.OrderDetailsService;
 import com.mindtree.ordermanagementservice.service.OrderFoodInfoService;
+import com.mindtree.ordermanagementservice.util.FireBaseAuthHelper;
 import com.mindtree.ordermanagementservice.util.OrderMangementServiceUtil;
 
 @RestController
@@ -40,7 +43,7 @@ public class OrderManagementRestApi {
 	DeliveryInfoService deliveryInfoService;
 	@Autowired
 	private RestTemplate template;
-  
+
 	@Bean
 	public RestTemplate restTemplate() {
 		return new RestTemplate();
@@ -48,98 +51,60 @@ public class OrderManagementRestApi {
 
 	@RequestMapping(value = "/order", method = RequestMethod.POST)
 	// @ResponseStatus(value = HttpStatus.CREATED)
-	public ResponseStatusModel createOder(@RequestBody OrderRequest orderRequest) {
-		// rest call to other services to restaurant details best on the
-		// Restaurant id;
+	public ResponseStatusModel createOder(@RequestHeader(value = "token") String token,
+			@RequestBody OrderRequest orderRequest) {
 		System.out.println("Rest create corder" + orderRequest.getResturentId());
-		
-		
 
-		List<OrderFoodInfo> listOfOrderFood = new ArrayList<OrderFoodInfo>();
-		OrderFoodInfo orderFoodInfo1 = new OrderFoodInfo();
-		orderFoodInfo1.setAdditionalInfo("normal cooked chiken better spice nuts");
-		orderFoodInfo1.setFoodId(26);
-		orderFoodInfo1.setFoodPrice(278);
+		// validate address
+		String getRestaurantValidetoreApiUrl = "http://demojenkins3.southeastasia.cloudapp.azure.com:5665/restaurants/"
+				+ orderRequest.getResturentId() + "/validate/" + orderRequest.getDeliveryaddress().getLatitude() + "/"
+				+ orderRequest.getDeliveryaddress().getLongitude();
 
-		OrderFoodInfo orderFoodInfo2 = new OrderFoodInfo();
-		orderFoodInfo2.setAdditionalInfo("chiken better spice nuts");
-		orderFoodInfo2.setFoodId(27);
-		orderFoodInfo2.setFoodPrice(200);
-		listOfOrderFood.add(orderFoodInfo1);
-		listOfOrderFood.add(orderFoodInfo2);
+		System.out.println("getRestaurantValidetoreApiUrl " + getRestaurantValidetoreApiUrl);
+		boolean isvalid = FireBaseAuthHelper.isValidToken(token);
+		if (!isvalid) {
+			throw new OrderManagementServiceException("not a valid token please try with valid token", 0, 0);
+		}
+		Map<String, String> info;
+		try {
+			info = FireBaseAuthHelper.getUserInfo(token);
+		} catch (InterruptedException e) {
+			throw new OrderManagementServiceException("not a valid token please try with valid token", 0, 0);
+		}
+		String emailId = info.get("email");
+		// cutomerId call for customerId
+		System.out.println(emailId);
 
-		// Object resaray = new Object();
-		// RestaurantModel res = new RestaurantModel();
-		// res.setRestaurantId("101");
-		// res.setLatitude("3224");
-		// res.setLongitude("ew224");
-		// res.setMinimumOrder("60");
-		// resaray = res;
+		String resValidate = template.getForObject(getRestaurantValidetoreApiUrl, String.class);
+		System.out.println(resValidate);
 
-		/*
-		 * String getRestaurantApiUrl =
-		 * "http://ZUUL-GATEWAY/PAYMENT-GATEWAY/restaurant/getRestaurant" +
-		 * orderRequest.getResturentId();
-		 */
-		ResponseStatusModel mockResponseStatusModel = new ResponseStatusModel();
-		mockResponseStatusModel.setStatusCode(200);
-		mockResponseStatusModel.setStatus("succ");
-		mockResponseStatusModel.setData(listOfOrderFood);
+		if (!resValidate.contains("Delivery is available for your area")) {
+			throw new OrderManagementServiceException("Resturent not provide the delivery for the given address", 0, 0);
+		}
 
-		// ResponseStatusModel restaurantInfo =
-		// template.getForObject(getRestaurantApiUrl,
-		// ResponseStatusModel.class);
-		RestaurantModel restaurantModel = null;
-		// restaurantModel = (RestaurantModel) restaurantInfo.getData();
-		// System.out.println("After loopinmg" +
-		// restaurantModel.getRestaurantId());
-		// rest call to get particular restaurant is delivered food for
-		// particular given delivered address
+		System.out.println("################# Validated");
+		// Menu Details
 
-		/*
-		 * String validateRestaurantApiUrl =
-		 * "http://ZUUL-GATEWAY/PAYMENT-GATEWAY/restaurant/validate" +
-		 * orderRequest.getResturentId() +
-		 * orderRequest.getAddress().getLatitude() +
-		 * orderRequest.getAddress().getLongitude();
-		 * 
-		 * ResponseStatusModel validateRestaurantResponse =
-		 * template.getForObject(validateRestaurantApiUrl,
-		 * 
-		 * ResponseStatusModel.class);
-		 */
-		ResponseStatusModel validateRestaurantResponse = new ResponseStatusModel();
-		validateRestaurantResponse.setMessage("failu");
+		String getRestaurantApiUrl = "http://demojenkins3.southeastasia.cloudapp.azure.com:5665/restaurants/"
+				+ orderRequest.getResturentId() + "/menu";
 
-		// check Restaurant provide food for user given place;
-		if (validateRestaurantResponse.getMessage().equals("failure")) {
-			// throw exception
-			throw new OrderManagementServiceException("Resturent not provide the delivery for the given address", 0);
+		ResturentFoodManuApiResponse restaurantMenu = template.getForObject(getRestaurantApiUrl,
+				ResturentFoodManuApiResponse.class);
+		System.out.println("Menu Size :: " + restaurantMenu.getData().size());
+
+		if (restaurantMenu == null) {
+			throw new OrderManagementServiceException("Resturent Menu not present", 0, 0);
 		}
 
 		List<OrderFoodInfo> listOfOrderFoodInfo = RequestBundle
 				.getOrderdFoodInfoRequstBuilder(orderRequest.getFoodItems());
+		System.out.println(restaurantMenu.getData().get(0));
 
-		List<OrderFoodInfo> foodMenu = mockResponseStatusModel.getData();
+		List<OrderFoodInfo> foodMenu = restaurantMenu.getData();
+		System.out.println(
+				foodMenu.get(0).getAdditionalInfo() + foodMenu.get(0).getFoodId() + foodMenu.get(0).getFoodPrice());
 
 		double totalPrice = OrderMangementServiceUtil.totalbillableprice(listOfOrderFoodInfo, foodMenu);
-
-		/*
-		 * System.out.println("total price ::" + totalPrice);
-		 * System.out.println("minimum order price" +
-		 * restaurantModel.getMinimumOrder());
-		 */
-
-		// validate minimum price
-		/*
-		 * if (totalPrice <
-		 * Double.parseDouble((restaurantModel.getMinimumOrder()))) { // throw
-		 * Exception throw new OrderManagementServiceException(
-		 * "minimum order should grater than " +
-		 * Double.parseDouble((restaurantModel.getMinimumOrder())), 0);
-		 * 
-		 * }
-		 */
 
 		// create deliveryinfo Records
 		DeliveryInfo deliveryInfo = RequestBundle.deliveryInfoRequstBuilder(orderRequest);
@@ -170,10 +135,37 @@ public class OrderManagementRestApi {
 		return responseStatusModel;
 	}
 
+	@RequestMapping(value = "/testorder", method = RequestMethod.POST)
+
+	// @ResponseStatus(value = HttpStatus.CREATED)
+	public String testCreateOrder(@RequestBody OrderRequest orderRequest) {
+
+		String getRestaurantApiUrl = "http://demojenkins3.southeastasia.cloudapp.azure.com:5665/restaurants/"
+				+ orderRequest.getResturentId();
+
+		String restaurantInfo = template.getForObject(getRestaurantApiUrl, String.class);
+		System.out.println(restaurantInfo);
+
+		return restaurantInfo;
+
+	}
+
 	@RequestMapping(value = "/order/{orderId}", method = RequestMethod.GET)
-	@ResponseStatus(value = HttpStatus.CREATED)
-	public ResponseStatusModel viewOder(@PathVariable int orderId) {
+	// @ResponseStatus(value = HttpStatus.CREATED)
+	public ResponseStatusModel viewOder(@RequestHeader(value = "token") String token, @PathVariable int orderId) {
 		ResponseStatusModel responseStatusModel = null;
+		boolean isvalid = FireBaseAuthHelper.isValidToken(token);
+		if (!isvalid) {
+			throw new OrderManagementServiceException("not a valid token please try with valid token", 0, 0);
+		}
+		Map<String, String> info;
+		try {
+			info = FireBaseAuthHelper.getUserInfo(token);
+		} catch (InterruptedException e) {
+			throw new OrderManagementServiceException("not a valid token please try with valid token", 0, 0);
+		}
+		String emailId = info.get("email");
+		// cutomerId call for customerId
 		try {
 			OrderDetails orderDetails = orderDetailsService.getOrderDetailsByOrderId(orderId);
 			DeliveryInfo deliveryInfo = deliveryInfoService.getDeliveryInfoByDeliveryId(orderDetails.getDeliveryId());
@@ -182,29 +174,60 @@ public class OrderManagementRestApi {
 					listOfOrderFoodInfo);
 			return responseStatusModel;
 		} catch (Exception e) {
-			throw new OrderManagementServiceException(" data not found in records  ", orderId);
+			throw new OrderManagementServiceException(" data not found in records  ", orderId, 0);
 		}
 	}
 
 	@RequestMapping(value = "/orders/{customerId}", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public ResponseStatusModel viewOderHistory(@PathVariable int customerId) {
+	public ResponseStatusModel viewOderHistory(@RequestHeader(value = "token") String token,
+			@PathVariable int customerId) {
+		boolean isvalid = FireBaseAuthHelper.isValidToken(token);
+		if (!isvalid) {
+			throw new OrderManagementServiceException("not a valid token please try with valid token", 0, 0);
+		}
+		Map<String, String> info;
+		try {
+			info = FireBaseAuthHelper.getUserInfo(token);
+		} catch (InterruptedException e) {
+			throw new OrderManagementServiceException("not a valid token please try with valid token", 0, 0);
+		}
+		String emailId = info.get("email");
+		// cutomerId call for customerId
 		ResponseStatusModel responseStatusModel = null;
-		//try {
-			List<OrderDetails> orderDetailsList = orderDetailsService.getOrderDetailsByCustomerId(customerId);
+		// try {
+		List<OrderDetails> orderDetailsList = orderDetailsService.getOrderDetailsByCustomerId(customerId);
 
-			if (orderDetailsList.size() <= 0) {
-				throw new OrderManagementServiceException("data not found in records", customerId);
-			}
-			responseStatusModel = ResponseBundle.getViewAllOderResponsBuilder(orderDetailsList);
-			return responseStatusModel;
-	//	} catch (Exception e) {
-		//	throw new OrderManagementServiceException(" data not found in records  ", customerId);
-		//}
+		if (orderDetailsList.size() <= 0) {
+			throw new OrderManagementServiceException("data not found in records", 0, customerId);
+		}
+		responseStatusModel = ResponseBundle.getViewAllOderResponsBuilder(orderDetailsList);
+		responseStatusModel.setCustomerId(customerId);
+		System.out.println("customer Id" + responseStatusModel.getCustomerId());
+
+		return responseStatusModel;
+		// } catch (Exception e) {
+		// throw new OrderManagementServiceException(" data not found in records
+		// ", customerId);
+		// }
 	}
 
 	@RequestMapping(value = "/order/{orderId}", method = RequestMethod.DELETE)
-	public ResponseStatusModel cancelOrder(@PathVariable int orderId) {
+	public ResponseStatusModel cancelOrder(@RequestHeader(value = "token") String token, @PathVariable int orderId)
+			throws InterruptedException {
+		//
+		boolean isvalid = FireBaseAuthHelper.isValidToken(token);
+		if (!isvalid) {
+			throw new OrderManagementServiceException("not a valid token please try with valid token", 0, 0);
+		}
+		Map<String, String> info;
+		try {
+			info = FireBaseAuthHelper.getUserInfo(token);
+		} catch (InterruptedException e) {
+			throw new OrderManagementServiceException("not a valid token please try with valid token", 0, 0);
+		}
+		String emailId = info.get("email");
+		// cutomerId call for customerId
 
 		OrderDetails orderDetail = orderDetailsService.cancelOrder(orderId);
 		ResponseStatusModel responseStatusModel = new ResponseStatusModel();

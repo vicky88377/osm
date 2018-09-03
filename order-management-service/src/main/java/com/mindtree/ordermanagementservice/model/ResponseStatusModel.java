@@ -19,20 +19,26 @@ public class ResponseStatusModel {
 	@JsonProperty(required = false)
 	private String message;
 	private List data;
-  
+
 	@JsonProperty(required = false)
 	private DeliveryInfo deliveryInfo;
+
+	// @JsonIgnore
+	private Integer customerId;
+	@JsonIgnore
+	private String orderStatus;
 
 	public ResponseStatusModel() {
 		super();
 	}
 
-	public ResponseStatusModel(int statusCode, String status, Object data, String message, int orderId) {
+	public ResponseStatusModel(int statusCode, String status, Object data, String message, int orderId,int customerId) {
 		super();
 		this.statusCode = statusCode;
 		this.status = status;
 		this.message = message;
 		this.orderId = orderId;
+		this.customerId=customerId;
 	}
 
 	@JsonProperty(required = false)
@@ -140,5 +146,21 @@ public class ResponseStatusModel {
 	}
 
 
+
+	public String getOrderStatus() {
+		return orderStatus;
+	}
+
+	public void setOrderStatus(String orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+
+	public Integer getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(Integer customerId) {
+		this.customerId = customerId;
+	}
 
 }

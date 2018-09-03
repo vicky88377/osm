@@ -8,6 +8,7 @@ public class OrderDetailsDto {
 	private Date ordredDate;
 	private String orderStatus;
 	private int orderId;
+	private String paymentMode;
 
 	public String getOrderStatus() {
 		return orderStatus;
@@ -39,6 +40,14 @@ public class OrderDetailsDto {
 
 	public void setOrderId(int orderId) {
 		this.orderId = orderId;
+	}
+
+	public String getPaymentMode() {
+		return paymentMode;
+	}
+
+	public void setPaymentMode(String paymentMode) {
+		this.paymentMode = paymentMode;
 	}
 
 }

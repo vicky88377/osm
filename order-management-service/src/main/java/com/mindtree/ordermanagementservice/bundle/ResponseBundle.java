@@ -15,6 +15,7 @@ public class ResponseBundle {
 		ResponseStatusModel responseStatusModel = new ResponseStatusModel();
 		responseStatusModel.setOrderId(orderDetails.getOrderId());
 		responseStatusModel.setStatusCode(200);
+		responseStatusModel.setCustomerId(orderDetails.getCustomerId());
 		responseStatusModel.setStatus("Success");
 		responseStatusModel.setData((listOfOrderFoodInfo));
 

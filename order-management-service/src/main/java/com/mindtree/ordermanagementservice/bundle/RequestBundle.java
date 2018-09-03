@@ -32,6 +32,7 @@ public class RequestBundle {
 		Date date = new Date();
 		orderDetails.setOrdredDate(new Timestamp(date.getTime()));
 		orderDetails.setRestaurentId(orderRequest.getResturentId());
+		orderDetails.setPaymentMode(orderRequest.getPaymentMode());
 		System.out.println("resturentId" + orderDetails.getRestaurentId() + "===" + orderRequest.getResturentId());
 		orderDetails.setTotalPrice(toatalPrice);
 		orderDetails.setOrderStatus("P");

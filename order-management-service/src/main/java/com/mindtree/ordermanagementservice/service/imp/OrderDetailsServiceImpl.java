@@ -21,7 +21,7 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
 	@Override
 	public OrderDetails create(OrderDetails orderDetails) {
 		OrderDetails saveOrderDetails = orderDetailsRepository.save(orderDetails);
-		
+
 		return saveOrderDetails;
 	}
 
@@ -37,20 +37,21 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
 			if (order.getOrderStatus().equals("P")) {
 				if (OrderMangementServiceUtil.getTimeDifference(order.getOrdredDate()) >= 10) {
 					throw new OrderManagementServiceException("Order can not be canceled after 10 mins of order placed",
-							order.getOrderId());
+							order.getOrderId(), 0);
 				}
 				order.setOrderStatus("C");
 				return orderDetailsRepository.save(order);
 			} else if (order.getOrderStatus().equals("D")) {
 				throw new OrderManagementServiceException(
-						"Order already delivered [we can't cancel the order once its delivered]", order.getOrderId());
+						"Order already delivered [we can't cancel the order once its delivered]", order.getOrderId(),
+						order.getCustomerId());
 			} else if (order.getOrderStatus().equals("C")) {
 				throw new OrderManagementServiceException("Can't cancel the order as it is already been canceled",
-						order.getOrderId());
+						order.getOrderId(), order.getCustomerId());
 			}
 
 		} else {
-			throw new OrderManagementServiceException("No Order present with requested order Id", orderId);
+			throw new OrderManagementServiceException("No Order present with requested order Id", orderId, 0);
 		}
 		// OrderDetails orderDetail =
 		// orderDetailsRepository.findById(orderId).get();
@@ -72,7 +73,7 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
 	@Override
 	public OrderDetails update(int orderId, String status) {
 		OrderDetails order = null;
-		
+
 		Optional<OrderDetails> orderDetail = orderDetailsRepository.findById(orderId);
 
 		if (orderDetail.isPresent()) {
@@ -85,7 +86,7 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
 			}
 
 		} else {
-			throw new OrderManagementServiceException("No Order present with requested order Id", orderId);
+			throw new OrderManagementServiceException("No Order present with requested order Id", orderId,0);
 		}
 
 		return order;
