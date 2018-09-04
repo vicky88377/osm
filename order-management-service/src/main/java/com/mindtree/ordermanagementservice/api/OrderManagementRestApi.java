@@ -1,8 +1,6 @@
 package com.mindtree.ordermanagementservice.api;
 
 import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.mindtree.ordermanagementservice.bundle.RequestMapper;
 import com.mindtree.ordermanagementservice.bundle.ResponseMapper;
 import com.mindtree.ordermanagementservice.dto.OrderRequest;
@@ -49,22 +46,21 @@ public class OrderManagementRestApi {
 		// validate token
 		validateToken(token);
 
-		// Call the Api to validate the address
+		// Call Restaurant Api to validate the address
 		if (!orderMangementServiceUtil.getRestaurantAddress(orderRequest.getResturentId(),
 				orderRequest.getDeliveryaddress().getLatitude(), orderRequest.getDeliveryaddress().getLongitude())) {
 			throw new OrderManagementServiceException("Resturent not provide the delivery for the given address");
 		}
 
-		/* Call the Api to get the user Id */
-		
-		  int customerId = orderMangementServiceUtil.getCustomerDetails(token);
-		  
-		  if (!(customerId == orderRequest.getCustomerDetails().getId())) {
-		  throw new OrderManagementServiceException("Customer Id mismatch", 0,
-		 0); }
-		 
+		/* Call Customer Details Api to get the user Id */
 
-		// Call the Api to get the Menu Details
+		int customerId = orderMangementServiceUtil.getCustomerDetails(token);
+
+		if (!(customerId == orderRequest.getCustomerDetails().getId())) {
+			throw new OrderManagementServiceException("Customer Id mismatch");
+		}
+
+		// Call Restaurant Api to get the Menu Details
 		List<ResturantMenuDto> foodMenu = orderMangementServiceUtil.getRestaurantMenu(orderRequest.getResturentId());
 
 		if (foodMenu.isEmpty()) {
@@ -75,8 +71,10 @@ public class OrderManagementRestApi {
 		List<OrderFoodInfo> listOfOrderFoodInfo = RequestMapper
 				.getOrderdFoodInfoRequstBuilder(orderRequest.getFoodItems());
 
+		//Calculate bill amount
 		double totalPrice = orderMangementServiceUtil.totalbillableprice(listOfOrderFoodInfo, foodMenu);
 
+		//Insert record into the database
 		OrderDetails savedOrderDetails = orderMangementServiceUtil.saveRecord(orderRequest, totalPrice,
 				listOfOrderFoodInfo);
 		if (savedOrderDetails == null) {
@@ -88,28 +86,24 @@ public class OrderManagementRestApi {
 	}
 
 	@RequestMapping(value = "/order/{orderId}", method = RequestMethod.GET)
-	@ResponseStatus(value = HttpStatus.CREATED)
 	public ResponseStatusModel viewOder(@RequestHeader(value = "token") String token, @PathVariable int orderId) {
 		ResponseStatusModel responseStatusModel = null;
 
 		// validate token
 		validateToken(token);
-		/* Call the Api to get the user Id */
+		/* Call Customer Details Api to get the user Id */
 		int customerId = orderMangementServiceUtil.getCustomerDetails(token);
-		try {
-			OrderDetails orderDetails = orderDetailsService.getOrderDetailsByOrderId(orderId);
-			if (!(customerId == orderDetails.getCustomerId())) {
-				throw new OrderManagementServiceException("Customer Id mismatch");
-			}
 
-			DeliveryInfo deliveryInfo = deliveryInfoService.getDeliveryInfoByDeliveryId(orderDetails.getDeliveryId());
-			List<OrderFoodInfo> listOfOrderFoodInfo = orderFoodInfoService.getListOfFoodItemsOrder(orderId);
-			responseStatusModel = ResponseMapper.getViewOderResponsBuilder(orderDetails, deliveryInfo,
-					listOfOrderFoodInfo);
-			return responseStatusModel;
-		} catch (Exception e) {
-			throw new OrderManagementServiceException(" data not found in records  ", orderId);
+		OrderDetails orderDetails = orderDetailsService.getOrderDetailsByOrderId(orderId);
+		
+		if (!(customerId == orderDetails.getCustomerId())) {
+			throw new OrderManagementServiceException("Customer Id mismatch");
 		}
+
+		DeliveryInfo deliveryInfo = deliveryInfoService.getDeliveryInfoByDeliveryId(orderDetails.getDeliveryId());
+		List<OrderFoodInfo> listOfOrderFoodInfo = orderFoodInfoService.getListOfFoodItemsOrder(orderId);
+		responseStatusModel = ResponseMapper.getViewOderResponsBuilder(orderDetails, deliveryInfo, listOfOrderFoodInfo);
+		return responseStatusModel;
 	}
 
 	@RequestMapping(value = "/orders/{customerId}", method = RequestMethod.GET)
@@ -120,15 +114,14 @@ public class OrderManagementRestApi {
 		// validate token
 		validateToken(token);
 
-		/*
-		 * Map<String, String> info; try { info =
-		 * FireBaseAuthHelper.getUserInfo(token); } catch (InterruptedException
-		 * e) { throw new
-		 * OrderManagementServiceException("not a valid token please try with valid token"
-		 * , 0, 0); }
-		 */
-		// String emailId = info.get("email");
-		// cutomerId call for customerId
+		/* Call Customer Details Api to get the user Id */
+
+		int customerid = orderMangementServiceUtil.getCustomerDetails(token);
+
+		if (!(customerid == customerId)) {
+			throw new OrderManagementServiceException("Customer Id mismatch");
+		}
+
 		ResponseStatusModel responseStatusModel = null;
 		// try {
 		List<OrderDetails> orderDetailsList = orderDetailsService.getOrderDetailsByCustomerId(customerId);
@@ -138,13 +131,9 @@ public class OrderManagementRestApi {
 		}
 		responseStatusModel = ResponseMapper.getViewAllOderResponsBuilder(orderDetailsList);
 		responseStatusModel.setCustomerId(customerId);
-		System.out.println("customer Id" + responseStatusModel.getCustomerId());
 
 		return responseStatusModel;
-		// } catch (Exception e) {
-		// throw new OrderManagementServiceException(" data not found in records
-		// ", customerId);
-		// }
+
 	}
 
 	@RequestMapping(value = "/order/{orderId}", method = RequestMethod.DELETE)
@@ -152,22 +141,15 @@ public class OrderManagementRestApi {
 			throws InterruptedException {
 		// validate token
 		validateToken(token);
-		Map<String, String> info;
-		try {
-			info = FireBaseAuthHelper.getUserInfo(token);
-		} catch (InterruptedException e) {
-			throw new OrderManagementServiceException("not a valid token please try with valid token");
+		int customerId = orderMangementServiceUtil.getCustomerDetails(token);
+		OrderDetails orderDetails = orderDetailsService.getOrderDetailsByOrderId(orderId);
+		if (customerId != orderDetails.getCustomerId()) {
+			throw new OrderManagementServiceException("Customer Id mismatch");
 		}
-		String emailId = info.get("email");
-		// cutomerId call for customerId
 
 		OrderDetails orderDetail = orderDetailsService.cancelOrder(orderId);
-		ResponseStatusModel responseStatusModel = new ResponseStatusModel();
-		responseStatusModel.setStatusCode(200);
-		responseStatusModel.setStatus("success");
-		responseStatusModel.setMessage("order has been canceled");
-		responseStatusModel.setOrderId(orderDetail.getOrderId());
-		return responseStatusModel;
+
+		return createResponse(orderDetail.getOrderId(), "order has been canceled");
 	}
 
 	@RequestMapping(value = "/orders/{orderId}/{orderStatus}", method = RequestMethod.PUT)
@@ -176,13 +158,15 @@ public class OrderManagementRestApi {
 
 		// validate token
 		validateToken(token);
-		OrderDetails orderDetail = orderDetailsService.update(orderId, orderStatus);
+		int customerId = orderMangementServiceUtil.getCustomerDetails(token);
+		OrderDetails orderDetails = orderDetailsService.getOrderDetailsByOrderId(orderId);
+		if (customerId != orderDetails.getCustomerId()) {
+			throw new OrderManagementServiceException("Customer Id mismatch");
+		}
 
-		ResponseStatusModel responseStatusModel = new ResponseStatusModel();
-		responseStatusModel.setStatusCode(200);
-		responseStatusModel.setMessage("order has been updated");
-		responseStatusModel.setOrderId(orderDetail.getOrderId());
-		return responseStatusModel;
+		OrderDetails orderDetail = orderDetailsService.update(orderId, orderStatus);
+		return createResponse(orderDetail.getOrderId(), "order has been updated");
+
 	}
 
 	private ResponseStatusModel createResponse(int orderId, String message) {
