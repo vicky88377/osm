@@ -119,7 +119,7 @@ public class OrderManagementServiceApplicationTests {
 	}
 	
 	// ================ Cancel Order- Success
-	@Test
+	//@Test
 	public void testCancelOrderPositiveCase() throws Exception
 	{		
 		String result ="{  \"statusCode\": 200,  \"status\": \"success\",  \"orderId\": 1,  \"message\": \"order has been canceled\",  \"data\": null,   \"deliveryInfo\": null}";
@@ -131,7 +131,7 @@ public class OrderManagementServiceApplicationTests {
 	}
 	
 	// ================ view Order ($Order_id} - Success
-		@Test
+		//@Test
 		public void testViewOrderPositiveCase() throws Exception
 		{		
 			String result ="{\n \"statusCode\": 200,\n \"status\": \"Success\",\n \"orderId\": 1,\n \"message\": null,\n \"data\": [ {\n \"quantity\": 2,\n \"additionalInfo\": \"Extra curd\",\n \"foodId\": 101,\n \"foodPrice\": 556.0\n }],\n \"deliveryInfo\": {\n \"deliveryId\": 1,\n \"deliveryBoyName\": \"Kumar\",\n \"deliveryBoyContactNumber\": 8147892042,\n \"deliveryAddress\": \"BTM\",\n \"deliveryStatus\": \"I\",\n \"latitude\": \"1032\",\n \"longitude\": \"2433\"\n }\n}";
@@ -145,7 +145,7 @@ public class OrderManagementServiceApplicationTests {
 		}
 		
 		// ================ view Order ($Customer_id} - Positive
-				@Test
+			//	@Test
 				public void testViewOrderByCustomerIdPositiveCase() throws Exception
 				{		
 					String result ="{\n \"statusCode\": 200,\n \"data\": [ {\n \"totalPrice\": 556,\n \"ordredDate\": \"2018-08-28T13:11:34.000+0000\",\n \"orderStatus\": \"P\",\n \"orderId\": 1\n }]\n}";
@@ -173,7 +173,7 @@ public class OrderManagementServiceApplicationTests {
 				
 				
 		// ================ update Order ($Order Id} and ($Status) - Success
-			@Test
+		//	@Test
 			public void testUpdateOrderStatus() throws Exception
 			{		
 				String result ="{\n   \"statusCode\": 200,\n   \"orderId\": 1,\n   \"message\": \"order has been updated\"\n}";
