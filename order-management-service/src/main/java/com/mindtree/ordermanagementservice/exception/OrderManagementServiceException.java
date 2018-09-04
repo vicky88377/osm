@@ -13,6 +13,23 @@ public class OrderManagementServiceException extends RuntimeException {
 		this.customerId = customerId;
 	}
 
+	public OrderManagementServiceException(String message, int orderId) {
+		super();
+		this.message = message;
+		this.orderId = orderId;
+	}
+
+	public OrderManagementServiceException(String message) {
+		super();
+		this.message = message;
+	}
+
+	public OrderManagementServiceException(int customerId, String message) {
+		super();
+		this.message = message;
+		this.customerId = customerId;
+	}
+
 	public String getMessage() {
 		return message;
 	}

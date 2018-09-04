@@ -12,7 +12,7 @@ import com.mindtree.ordermanagementservice.model.DeliveryInfo;
 import com.mindtree.ordermanagementservice.model.OrderDetails;
 import com.mindtree.ordermanagementservice.model.OrderFoodInfo;
 
-public class RequestBundle {
+public class RequestMapper {
 
 	public static DeliveryInfo deliveryInfoRequstBuilder(OrderRequest orderRequest) {
 		DeliveryInfo deliveryInfo = new DeliveryInfo();

@@ -7,16 +7,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 //@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+//@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class ResponseStatusModel {
 
 	private int statusCode;
 
 	private String status;
-	@JsonProperty(required = false)
-	@JsonIgnore
+	/*@JsonProperty(required = false)
+	@JsonIgnore*/
 	private Integer orderId;
-	@JsonProperty(required = false)
+	//@JsonProperty(required = false)
 	private String message;
 	private List data;
 
@@ -25,7 +25,7 @@ public class ResponseStatusModel {
 
 	// @JsonIgnore
 	private Integer customerId;
-	@JsonIgnore
+	//@JsonIgnore
 	private String orderStatus;
 
 	public ResponseStatusModel() {

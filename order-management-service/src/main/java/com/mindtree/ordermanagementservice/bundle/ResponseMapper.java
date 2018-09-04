@@ -9,7 +9,7 @@ import com.mindtree.ordermanagementservice.model.OrderDetails;
 import com.mindtree.ordermanagementservice.model.OrderFoodInfo;
 import com.mindtree.ordermanagementservice.model.ResponseStatusModel;
 
-public class ResponseBundle {
+public class ResponseMapper {
 	public static ResponseStatusModel getViewOderResponsBuilder(OrderDetails orderDetails, DeliveryInfo deliveryInfo,
 			List<OrderFoodInfo> listOfOrderFoodInfo) {
 		ResponseStatusModel responseStatusModel = new ResponseStatusModel();
@@ -18,8 +18,8 @@ public class ResponseBundle {
 		responseStatusModel.setCustomerId(orderDetails.getCustomerId());
 		responseStatusModel.setStatus("Success");
 		responseStatusModel.setData((listOfOrderFoodInfo));
-
 		responseStatusModel.setDeliveryInfo(deliveryInfo);
+		responseStatusModel.setOrderStatus(orderDetails.getOrderStatus());
 
 		return responseStatusModel;
 	}
@@ -27,7 +27,7 @@ public class ResponseBundle {
 	public static ResponseStatusModel getViewAllOderResponsBuilder(List<OrderDetails> orderDetailsList) {
 		List<OrderDetailsDto> orderDetailsDtos = new ArrayList<OrderDetailsDto>();
 		for (OrderDetails orderDetail : orderDetailsList) {
-			OrderDetailsDto orderDetailsDto = ResponseBundle.processOrderDetailsToOrderDetaisDto(orderDetail);
+			OrderDetailsDto orderDetailsDto = processOrderDetailsToOrderDetaisDto(orderDetail);
 			orderDetailsDtos.add(orderDetailsDto);
 		}
 		ResponseStatusModel responseStatusModel = new ResponseStatusModel();

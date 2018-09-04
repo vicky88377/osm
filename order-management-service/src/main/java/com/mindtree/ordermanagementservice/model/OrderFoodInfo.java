@@ -22,21 +22,7 @@ public class OrderFoodInfo {
 	@JsonProperty("food_price")
 	private double foodPrice;
 
-	// // @Transient
-	// private String descrption;
-	// // @Transient
-	// private String foodName;
-	// // @Transient
-	// @JsonProperty("availability_status")
-	//
-	// private String availabilityStatus;
-	// // @Transient
-	// @JsonProperty("restaurant_id")
-	//
-	// private String restaurantId;
-	// // @Transient
-	// private String cuisinesId;
-
+	
 	public int getOrderFoodId() {
 		return orderFoodId;
 	}

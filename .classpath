@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="order-management-service/src/main/java"/>
+	<classpathentry kind="src" path="order-management-service/src/test/java"/>
+	<classpathentry kind="lib" path="order-management-service/.mvn/wrapper/maven-wrapper.jar"/>
+	<classpathentry kind="lib" path="order-management-service/bin/.mvn/wrapper/maven-wrapper.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

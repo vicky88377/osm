@@ -6,11 +6,7 @@ import java.util.List;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.io.ClassPathResource;
-
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
+import org.springframework.web.client.RestTemplate;
 
 import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -21,7 +17,6 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-
 @SpringBootApplication
 @EnableSwagger2
 public class OrderManagementServiceApplication {
@@ -30,8 +25,6 @@ public class OrderManagementServiceApplication {
 
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(OrderManagementServiceApplication.class, args);
-
-	 
 
 		/*
 		 * Task<FirebaseToken> decodedToken =
@@ -47,24 +40,18 @@ public class OrderManagementServiceApplication {
 	@Bean
 	public Docket docket() {
 		// Adding Header
-		List<Parameter> aParameters = new ArrayList<Parameter>();
-		ParameterBuilder aParameterBuilder1 = new ParameterBuilder();
-		// aParameterBuilder1.name("userInfoUri").modelRef(new
-		// ModelRef("string")).parameterType("header").required(true)
-		// .build();
-		// ParameterBuilder aParameterBuilder2 = new ParameterBuilder();
-		// aParameterBuilder2.name("tokenValidateUri").modelRef(new
-		// ModelRef("string")).parameterType("header")
-		// .required(true).build();
-		ParameterBuilder aParameterBuilder3 = new ParameterBuilder();
-		aParameterBuilder3.name("token").modelRef(new ModelRef("string")).parameterType("header").required(true)
-				.build();
-		// aParameters.add(aParameterBuilder1.build());
-		// aParameters.add(aParameterBuilder2.build());
-		aParameters.add(aParameterBuilder3.build());
+		List<Parameter> parameters = new ArrayList<Parameter>();
+
+		ParameterBuilder parameterBuilder = new ParameterBuilder();
+		parameterBuilder.name("token").modelRef(new ModelRef("string")).parameterType("header").required(true).build();
+		parameters.add(parameterBuilder.build());
 		return new Docket(DocumentationType.SWAGGER_2).select()
 				.apis(RequestHandlerSelectors.basePackage("com.mindtree.ordermanagementservice.api"))
 
-				.paths(PathSelectors.any()).build().globalOperationParameters(aParameters);
+				.paths(PathSelectors.any()).build().globalOperationParameters(parameters);
+	}
+	@Bean
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
 	}
 }
