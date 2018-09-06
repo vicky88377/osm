@@ -98,7 +98,7 @@ public class OrderMangementServiceUtil {
 	public int getCustomerDetails(String token) {
 
 		HttpHeaders headers=new HttpHeaders();
-		headers.add("AUTH-TOKEN", token);
+		headers.add("Authorization", token);
 		System.out.println("URL :: " + customerDetailUrl);
 		HttpEntity http = new HttpEntity<>(headers);
 		ResponseEntity<CustomerDetailsResponse> resp = template.exchange(customerDetailUrl,HttpMethod.GET,http,
