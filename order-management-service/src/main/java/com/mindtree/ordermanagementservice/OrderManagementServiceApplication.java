@@ -36,7 +36,16 @@ public class OrderManagementServiceApplication {
 		 */
 
 	}
-
+	private ApiInfo apiInfo() {
+        return new ApiInfoBuilder()
+            .title("Order Management Service")
+          //  .description("Awesome description")
+            .license("Apache 2.0")
+            .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
+            .termsOfServiceUrl("")
+            .version("1.0.0")
+            .build();
+    }
 	@Bean
 	public Docket docket() {
 		// Adding Header
@@ -48,7 +57,7 @@ public class OrderManagementServiceApplication {
 		return new Docket(DocumentationType.SWAGGER_2).select()
 				.apis(RequestHandlerSelectors.basePackage("com.mindtree.ordermanagementservice.api"))
 
-				.paths(PathSelectors.any()).build().globalOperationParameters(parameters);
+				.paths(PathSelectors.any()).build().apiInfo(apiInfo()).globalOperationParameters(parameters);
 	}
 	@Bean
 	public RestTemplate restTemplate() {
