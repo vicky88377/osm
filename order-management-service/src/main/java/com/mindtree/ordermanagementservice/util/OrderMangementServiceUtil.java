@@ -72,12 +72,10 @@ public class OrderMangementServiceUtil {
 			for (ResturantMenuDto menuItem : foodMenu) {
 				if (foodIdToFoodPrice == null) {
 					foodIdToFoodPrice = new HashMap<Integer, Double>();
-
 					foodIdToFoodPrice.put(menuItem.getFoodId(), menuItem.getFoodPrice());
 
 				}
 				foodIdToFoodPrice.put(menuItem.getFoodId(), menuItem.getFoodPrice());
-
 			}
 
 			for (OrderFoodInfo customerOrderFood : customerOrderFoodList) {
@@ -91,19 +89,20 @@ public class OrderMangementServiceUtil {
 			}
 
 		}
+		System.out.println("price" + totalPrice);
 
 		return totalPrice;
 	}
 
 	public int getCustomerDetails(String token) {
 
-		HttpHeaders headers=new HttpHeaders();
+		HttpHeaders headers = new HttpHeaders();
 		headers.add("Authorization", token);
 		System.out.println("URL :: " + customerDetailUrl);
 		HttpEntity http = new HttpEntity<>(headers);
-		ResponseEntity<CustomerDetailsResponse> resp = template.exchange(customerDetailUrl,HttpMethod.GET,http,
+		ResponseEntity<CustomerDetailsResponse> resp = template.exchange(customerDetailUrl, HttpMethod.GET, http,
 				CustomerDetailsResponse.class);
-	
+
 		System.out.println("URL :: " + resp.getStatusCode());
 		int customerId = 0;
 

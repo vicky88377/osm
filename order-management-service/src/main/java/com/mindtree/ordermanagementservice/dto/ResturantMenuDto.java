@@ -1,5 +1,7 @@
 package com.mindtree.ordermanagementservice.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ResturantMenuDto {
 
 	private String description;
@@ -8,6 +10,7 @@ public class ResturantMenuDto {
 	private String availabilityStatus;
 	private String restaurantId;
 	private String cuisinesId;
+	@JsonProperty("food_price")
 	private double foodPrice;
 	public String getDescription() {
 		return description;

@@ -79,17 +79,13 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
 		if (orderDetail.isPresent()) {
 			order = orderDetail.get();
 
-			if (order.getOrderStatus().equals("P")) {
-
-				order.setOrderStatus(status);
-				return orderDetailsRepository.save(order);
-			}
+			order.setOrderStatus(status);
 
 		} else {
-			throw new OrderManagementServiceException("No Order present with requested order Id", orderId,0);
+			throw new OrderManagementServiceException("No Order present with requested order Id", orderId, 0);
 		}
 
-		return order;
+		return orderDetailsRepository.save(order);
 	}
 
 }
