@@ -28,15 +28,6 @@ public class OrderManagementServiceApplication {
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(OrderManagementServiceApplication.class, args);
 
-		/*
-		 * Task<FirebaseToken> decodedToken =
-		 * FirebaseAuth.getInstance().verifyIdToken(args[0]+"");
-		 * Thread.sleep(5000l);
-		 * System.out.println("==decodedToken=="+decodedToken);
-		 * System.out.println("===My Email=="+decodedToken.getResult().getEmail(
-		 * ));
-		 */
-
 	}
 
 	private ApiInfo apiInfo() {
@@ -56,7 +47,7 @@ public class OrderManagementServiceApplication {
 		List<Parameter> parameters = new ArrayList<Parameter>();
 
 		ParameterBuilder parameterBuilder = new ParameterBuilder();
-		parameterBuilder.name("token").modelRef(new ModelRef("string")).parameterType("header").required(true).build();
+		parameterBuilder.name("Authorization").modelRef(new ModelRef("string")).parameterType("header").required(true).build();
 		parameters.add(parameterBuilder.build());
 		return new Docket(DocumentationType.SWAGGER_2).select()
 				.apis(RequestHandlerSelectors.basePackage("com.mindtree.ordermanagementservice.api"))
