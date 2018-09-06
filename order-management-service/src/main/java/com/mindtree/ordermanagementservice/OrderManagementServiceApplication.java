@@ -33,7 +33,7 @@ public class OrderManagementServiceApplication {
 	private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
             .title("Order Management Service")
-           .description("Created by Team (Uday, Shekhar, Viakas, Pavithra)")
+           .description("Created by Team (Uday, Shekhar, Vikas, Pavithra)")
             .license("Apache 2.0")
             .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
             .termsOfServiceUrl("")
