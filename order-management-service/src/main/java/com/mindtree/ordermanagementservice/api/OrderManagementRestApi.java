@@ -86,7 +86,7 @@ public class OrderManagementRestApi {
 	}
 
 	@RequestMapping(value = "/order/{orderId}", method = RequestMethod.GET)
-	public ResponseStatusModel viewOder(@RequestHeader(value = "Authorization") String token, @PathVariable int orderId) {
+	public ResponseStatusModel viewOrder(@RequestHeader(value = "Authorization") String token, @PathVariable int orderId) {
 		ResponseStatusModel responseStatusModel = null;
 
 		// validate token
@@ -108,7 +108,7 @@ public class OrderManagementRestApi {
 
 	@RequestMapping(value = "/orders/{customerId}", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public ResponseStatusModel viewOderHistory(@RequestHeader(value = "Authorization") String token,
+	public ResponseStatusModel viewOrderHistory(@RequestHeader(value = "Authorization") String token,
 			@PathVariable int customerId) {
 
 		// validate token
