@@ -40,7 +40,7 @@ public class OrderManagementRestApi {
 
 	@RequestMapping(value = "/order", method = RequestMethod.POST)
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public ResponseStatusModel createOrder(@RequestHeader(value = "token") String token,
+	public ResponseStatusModel createOrder(@RequestHeader(value = "Authorization") String token,
 			@RequestBody OrderRequest orderRequest) {
 
 		// validate token
@@ -86,7 +86,7 @@ public class OrderManagementRestApi {
 	}
 
 	@RequestMapping(value = "/order/{orderId}", method = RequestMethod.GET)
-	public ResponseStatusModel viewOder(@RequestHeader(value = "token") String token, @PathVariable int orderId) {
+	public ResponseStatusModel viewOder(@RequestHeader(value = "Authorization") String token, @PathVariable int orderId) {
 		ResponseStatusModel responseStatusModel = null;
 
 		// validate token
@@ -108,7 +108,7 @@ public class OrderManagementRestApi {
 
 	@RequestMapping(value = "/orders/{customerId}", method = RequestMethod.GET)
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public ResponseStatusModel viewOderHistory(@RequestHeader(value = "token") String token,
+	public ResponseStatusModel viewOderHistory(@RequestHeader(value = "Authorization") String token,
 			@PathVariable int customerId) {
 
 		// validate token
@@ -137,7 +137,7 @@ public class OrderManagementRestApi {
 	}
 
 	@RequestMapping(value = "/order/{orderId}", method = RequestMethod.DELETE)
-	public ResponseStatusModel cancelOrder(@RequestHeader(value = "token") String token, @PathVariable int orderId)
+	public ResponseStatusModel cancelOrder(@RequestHeader(value = "Authorization") String token, @PathVariable int orderId)
 			throws InterruptedException {
 		// validate token
 		validateToken(token);
@@ -153,7 +153,7 @@ public class OrderManagementRestApi {
 	}
 
 	@RequestMapping(value = "/orders/{orderId}/{orderStatus}", method = RequestMethod.PUT)
-	public ResponseStatusModel updateOrderStatus(@RequestHeader(value = "token") String token,
+	public ResponseStatusModel updateOrderStatus(@RequestHeader(value = "Authorization") String token,
 			@PathVariable int orderId, @PathVariable String orderStatus) {
 
 		// validate token
